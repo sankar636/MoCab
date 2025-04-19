@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-
+import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 const userSchema = new Schema({
     username: {
-        type:String,
+        type: String,
         required: true,
         unique: true
     },
@@ -23,12 +24,27 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['driver','passenger','admin'],
+        enum: ['driver', 'passenger', 'admin'],
         default: 'passenger'
     },
     profilePicture: {
         type: String
     }
-},{timestamps: true})
+}, { timestamps: true })
 
-export default User = mongoose.model("User",userSchema);
+// It Securely store hashed passwords before saving users.
+userSchema.pre('save',async function (next) {
+    if(!this.isModified("password")){
+        return next()
+    }
+    this.password = await bcrypt.hash(this.password, 8)
+    next();
+});
+// Method to check password is correct or not(ex- at the time of login of the user it need to check the password)
+userSchema.methods.isPasswordCorrect = async function(inputPassword){
+    const isMatch = await bcrypt.compare(inputPassword,this.password)
+    return isMatch
+}
+
+
+export default User = mongoose.model("User", userSchema);
