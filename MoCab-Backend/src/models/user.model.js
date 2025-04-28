@@ -4,10 +4,15 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 
 const userSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true
+    fullname: {
+        firstname: {
+            type: String,
+            required: true,
+            minlength: [3,'First name must be atleast three character']
+        },
+        lastname: {
+            type: String,
+        }
     },
     email: {
         type: String,
@@ -16,11 +21,15 @@ const userSchema = new Schema({
     },
     phoneNo: {
         type: Number,
-        required: true
+        // required: true
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select: false // Hide password field when querying users
+    },
+    socketId:{
+        type: String
     },
     role: {
         type: String,
@@ -32,19 +41,31 @@ const userSchema = new Schema({
     }
 }, { timestamps: true })
 
-// It Securely store hashed passwords before saving users.
-userSchema.pre('save',async function (next) {
-    if(!this.isModified("password")){
+// Pre-save middleware: Auto-hash password before saving if modified
+userSchema.pre('save', async function (next) {
+    if (!this.isModified("password")) {
         return next()
     }
     this.password = await bcrypt.hash(this.password, 8)
     next();
 });
-// Method to check password is correct or not(ex- at the time of login of the user it need to check the password)
-userSchema.methods.isPasswordCorrect = async function(inputPassword){
-    const isMatch = await bcrypt.compare(inputPassword,this.password)
+
+// Instance method: Check if the entered password matches the hashed password
+userSchema.methods.isPasswordCorrect = async function (inputPassword) {
+    const isMatch = await bcrypt.compare(inputPassword, this.password)
     return isMatch
 }
 
+// Instance method: Generate JWT auth token 
+userSchema.methods.generateAuthToken = async function(){
+    const token = jwt.sign({_id: this._id}, process.env.JWT_SECRET)
+    return token
+}
 
-export default User = mongoose.model("User", userSchema);
+// Static method: Manual password hashing (for special cases like manual updates)
+userSchema.statics.hashPassword = async function(password){
+    return await bcrypt.hash(password, 10);
+}
+
+const User = mongoose.model("User", userSchema);
+export default User;
