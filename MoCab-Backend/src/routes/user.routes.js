@@ -3,7 +3,7 @@ import { body } from 'express-validator'
 const router = Router()
 
 // import userController from '../controllers/user.controller.js' (not like this)
-import { registerUser, loginUser,getUserProfile } from '../controllers/user.controller.js';
+import { registerUser, loginUser,getUserProfile, logoutUser } from '../controllers/user.controller.js';
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 router.route('/register').post(
@@ -24,6 +24,8 @@ router.route('/login').post(
 )
 
 router.route('/profile').get(verifyJWT,getUserProfile)
+
+router.route('/logout').post(verifyJWT,logoutUser)
 
 export default router
 

@@ -5,6 +5,7 @@ import  User  from '../models/user.model.js'
 import { createUser } from '../services/user.service.js'
 import { validationResult } from 'express-validator'
 import ApiResponse from '../utils/ApiResponse.js'
+import BlacklistedToken from '../models/blackListedToken.model.js'
 
 const registerUser = asyncHandler(async(req,res) => {
     console.log(req.body);
@@ -68,6 +69,10 @@ const loginUser = asyncHandler(async(req,res) => {
     const token =await  user.generateAuthToken()
     console.log("Generated Token", token);
 
+    res.cookie('token',token,
+       {httpOnly: true,} 
+    )// when we did not share any cookie in postman (Authorization Bearerar <token> ) then it will work
+
     return res.status(200).json(
         new ApiResponse(200, "User logedin Successfully", {user,token},)
     )   
@@ -79,8 +84,22 @@ const getUserProfile = asyncHandler(async(req,res,next) => {
             req.user
         )
 })
+
+const logoutUser = asyncHandler(async(req,res,next) => {
+    res.clearCookie('token')
+
+    const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "")
+
+    await BlacklistedToken.create({token}); // this will blacklist the token but may still have in localstorage or shared by anyone to avoid these mistake we have to update in middleware 
+
+    return res.status(200)
+        .json(
+            new ApiResponse(200, "User Loged Out")
+        )
+})
 export { 
     registerUser,
     loginUser,
-    getUserProfile
+    getUserProfile,
+    logoutUser
 };

@@ -2,18 +2,23 @@ import User from "../models/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/AsyncHandler.js";
 import jwt from 'jsonwebtoken'
+import BlacklistedToken from "../models/blackListedToken.model.js";
 
 
 export const verifyJWT = asyncHandler(async (req, res, next) => {
     // console.log("Cookies:", req.cookies);
     // console.log("Authorization Header:", req.header("Authorization"));
 
-    const token = req.cookies?.token
-        || req.header("Authorization")?.replace("Bearer ", "")
+    const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "")
 
     console.log("Token", token);
     if (!token) {
         throw new ApiError(400, "Unauthorized request")
+    }
+
+    const isBlacklistedToken = await BlacklistedToken.findOne({token: token})
+    if(isBlacklistedToken){
+        throw new ApiError(400,"Token has been blacklisted")
     }
 
     try {
@@ -38,3 +43,12 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     }
 })
 
+
+/*
+const isBlacklistedToken = await BlacklistedToken.findOne({token: token})
+this part check
+// Check if the token is blacklisted (e.g., logged out tokens).
+// If found in the BlacklistedToken collection, deny access.
+// This prevents reuse of JWTs after logout or forced expiration.
+
+*/
