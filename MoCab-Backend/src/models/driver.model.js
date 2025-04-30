@@ -25,7 +25,7 @@ const driverSchema = new Schema({
     phoneNo: {
         type: Number,
         // required: true
-        match: [/^[6-9]\d{9}$/, "Please enter a valid 10-digit phone number"]
+        // match: [/^[6-9]\d{9}$/, "Please enter a valid 10-digit phone number"]
     },
     password: {
         type: String,
@@ -65,11 +65,11 @@ const driverSchema = new Schema({
     location: {
         lat:{
             type: Number,
-            required: true
+            // required: true
         },
         log:{
             type: Number,
-            required: true
+            // required: true
         }
     },
     profilePicture: {

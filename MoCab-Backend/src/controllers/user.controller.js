@@ -21,15 +21,18 @@ const registerUser = asyncHandler(async (req, res) => {
     if (existingUser) {
         return res.status(409).json(new ApiError(409, "User with this email already exists"));
     }
-    const user = await createUser({
-        fullname: {
-            firstname: "John",
-            lastname: "Doe"
-        },
-        email: "john@example.com",
-        password: "123456"
-    })
-
+    const user = await createUser(
+       {
+        firstname:fullname.firstname,
+        lastname:fullname.lastname,
+        email,
+        password
+       }
+    )
+    console.log(user);    
+    if(!user){
+        throw new ApiError(400,"User Not created")
+    }
     // Generate auth token for the created user
     const token = await user.generateAuthToken();
     console.log("Generated token", token);
