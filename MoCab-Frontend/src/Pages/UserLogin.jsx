@@ -4,18 +4,36 @@ import { Link } from 'react-router-dom'
 const UserLogin = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [userData, setUserData] = useState({})
+  // const [userData, setUserData] = useState({})
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("Form Sbmited Successfully");    
-    //set userData
-    setUserData({
-      email: email,
-      password: password
-    })
-    console.log(userData);
-    
+    console.log("Form Sbmited Successfully");
+    // //set userData
+    // setUserData({
+    //   email: email,
+    //   password: password
+    // })
+    // console.log(userData);
+
+    const userData = {
+      email,
+      password
+    }
+    const baseURL = import.meta.env.VITE_BASE_URL;
+    try {
+      const response = await axios.post(`${baseURL}/user/login`, userData);
+      console.log("Login User:", response);
+
+      if (response.status === 201) {
+        const data = response.data;
+        setUser(data.user); // assuming this is defined
+        navigate('/home');
+      }
+    } catch (err) {
+      console.error("Error while Login user:", err);
+    }
+
     // After the form submit email and password set to empty
     setEmail("")
     setPassword("")
@@ -24,7 +42,7 @@ const UserLogin = () => {
     <div className='flex h-screen flex-col justify-between'>
       <div >
         <img src={Logo} alt="" className='w-20' />
-        <form className='px-7' onSubmit={(e) => {submitHandler(e)}}>
+        <form className='px-7' onSubmit={(e) => { submitHandler(e) }}>
           <h3 className='text-xl mb-2 font-medium'>What's Your Email</h3>
           <input
             required

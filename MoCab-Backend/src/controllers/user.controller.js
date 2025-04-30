@@ -13,7 +13,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!errors.isEmpty()) {  // i.e if error is not empty(means there is some error in body of userRouter)
         return res.status(400).json(new ApiError(400, "Validation   errors", errors.array()));
     }
-
+    
     const { fullname, email, password } = req.body
     // don't need to hash password as password already hashed in user.model
     // Check if a user with the same email already exists
@@ -29,7 +29,7 @@ const registerUser = asyncHandler(async (req, res) => {
         password
        }
     )
-    console.log(user);    
+    console.log("User Data ",user);    
     if(!user){
         throw new ApiError(400,"User Not created")
     }

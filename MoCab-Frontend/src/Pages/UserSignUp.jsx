@@ -1,17 +1,26 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Logo from '../assets/Logo1.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+
+import axios from 'axios'
+import { UserDataContext } from '../Context/UserContext.jsx'
+
 const UserSignUp = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [firstname, setFirstname] = useState("")
   const [lastname, setLastname] = useState("")
-  const [userData, setUserData] = useState({})
-  // const [fullname, setFullname] = useState("")
-  const submitHandler = (e) => {
+  // const [userData, setUserData] = useState({})
+
+  const { user, setUser } = useContext(UserDataContext)
+
+  const navigate = useNavigate()
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     console.log("Form Sbmited Successfully");
-    //set userData
+    /*
+    set userData(for Frontend)
     setUserData({
       email: email,
       password: password,
@@ -20,7 +29,40 @@ const UserSignUp = () => {
         lastname: lastname
       }
     })
-    // console.log(userData);
+    */
+
+    // For Backend Setting of userData
+    const newUserData = {
+      fullname: {
+        firstname,
+        lastname,
+      },
+      email,
+      password,
+
+    } // Now we need to send the data to backend by using asios (make the function async)
+
+    const baseURL = import.meta.env.VITE_BASE_URL;
+    try {
+      const response = await axios.post(`${baseURL}/user/register`, newUserData);
+      console.log("Registered:", response);
+    
+      if (response.status === 201) {
+        const data = response.data;
+        setUser(data.user); // assuming this is defined
+        navigate('/home');
+      }
+    } catch (err) {
+      console.error("Error while registering user:", err);
+    }
+
+    // Check if the response was successful
+    // if (response.status === 201) {
+    //   const data = response.data;
+    //   setUser(data.user); // Make sure setUser is defined in context
+    //   navigate('/home');
+    // }
+
 
     // After the form submit email and password set to empty
     setEmail("")
@@ -98,3 +140,6 @@ const UserSignUp = () => {
 }
 
 export default UserSignUp
+
+
+// Like asios other methods to send data from frontend to backend are (fetch Api, GraphSOL, WebSocket, form etc XmlHTTPRequest)
