@@ -19,10 +19,10 @@ function App() {
         <Route path='UserLogin' element={<UserLogin/>}></Route>
         <Route path='UserSignUp' element={<UserSignUp/>}></Route>
         <Route path='/home' element={
-          <UserProtectWrapper>
-            <Home/>
-          </UserProtectWrapper>
-          // <Home/>
+          // <UserProtectWrapper>
+          //   <Home/>
+          // </UserProtectWrapper>
+          <Home/>
           }>
           </Route>
           <Route path='/user/logout' element={
