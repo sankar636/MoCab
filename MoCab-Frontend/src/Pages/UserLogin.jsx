@@ -1,14 +1,22 @@
 import React, { useState } from 'react'
 import Logo from '../assets/Logo1.png'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { UserDataContext } from '../Context/UserContext.jsx'
+import { useContext } from 'react'
+
 const UserLogin = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  // const [userData, setUserData] = useState({})
+
+  const navigate = useNavigate()
+
+  const { user, setUser } = useContext(UserDataContext)
+  
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("Form Sbmited Successfully");
     // //set userData
     // setUserData({
     //   email: email,
@@ -25,18 +33,26 @@ const UserLogin = () => {
       const response = await axios.post(`${baseURL}/user/login`, userData);
       console.log("Login User:", response);
 
-      if (response.status === 201) {
-        const data = response.data;
-        setUser(data.user); // assuming this is defined
+      if (response.status === 200) {
+        const data = response.data.data; // this is because of the structure of the code
+        // console.log("Data ",data);
+        // console.log("User Data",data.user);        
+        // console.log("Token", data.token);        
+        setUser(data.user); 
+        localStorage.setItem('token', data.token)
         navigate('/home');
       }
     } catch (err) {
       console.error("Error while Login user:", err);
+      console.log("Login Error:", err.message);
+      
     }
 
     // After the form submit email and password set to empty
     setEmail("")
     setPassword("")
+    console.log("Form Sbmited Successfully");
+
   }
   return (
     <div className='flex h-screen flex-col justify-between'>
@@ -62,6 +78,7 @@ const UserLogin = () => {
             onChange={(e) => {
               setPassword(e.target.value)
             }}
+            minLength={6}
             placeholder='password'
             className='bg-[#eeeeee] rounded px-4 py-2 border w-full text-lg placeholder:text-base'
           />

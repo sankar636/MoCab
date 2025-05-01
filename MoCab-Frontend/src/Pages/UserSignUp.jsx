@@ -10,6 +10,7 @@ const UserSignUp = () => {
   const [password, setPassword] = useState("")
   const [firstname, setFirstname] = useState("")
   const [lastname, setLastname] = useState("")
+  const [error, setError] = useState("")
   // const [userData, setUserData] = useState({})
 
   const { user, setUser } = useContext(UserDataContext)
@@ -18,7 +19,6 @@ const UserSignUp = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("Form Sbmited Successfully");
     /*
     set userData(for Frontend)
     setUserData({
@@ -30,6 +30,10 @@ const UserSignUp = () => {
       }
     })
     */
+    if(password.length < 6){
+      setError("PasswordPassword must be at least 6 characters long.")
+      return;
+    }
 
     // For Backend Setting of userData
     const newUserData = {
@@ -48,8 +52,10 @@ const UserSignUp = () => {
       console.log("Registered:", response);
     
       if (response.status === 201) {
-        const data = response.data;
-        setUser(data.user); // assuming this is defined
+        const data = response.data.data;
+        setUser(data.user); 
+        console.log(data.token);        
+        localStorage.setItem('token', data.token)
         navigate('/home');
       }
     } catch (err) {
@@ -65,10 +71,13 @@ const UserSignUp = () => {
 
 
     // After the form submit email and password set to empty
+    setError("")
     setEmail("")
     setPassword("")
     setFirstname("")
     setLastname("")
+    console.log("Form Sbmited Successfully");
+
   }
   return (
     <div className='flex h-screen flex-col justify-between'>
@@ -120,9 +129,11 @@ const UserSignUp = () => {
               onChange={(e) => {
                 setPassword(e.target.value)
               }}
+              minLength={6}
               placeholder='password'
               className='bg-[#eeeeee] rounded px-4 py-2 border w-full text-lg placeholder:text-base'
             />
+            {error && <p className="text-red-500 mt-1 text-sm">{error}</p>}
           </div>
           <button className='bg-[#111111] text-white mb-2 mt-4 rounded px-4 py-2  border w-full font-semibold placeholder:text-base '>Register</button>
         </form>
@@ -143,3 +154,27 @@ export default UserSignUp
 
 
 // Like asios other methods to send data from frontend to backend are (fetch Api, GraphSOL, WebSocket, form etc XmlHTTPRequest)
+
+/*
+I set the data = response.data.data because of the structure of storing of data after submission is like
+  response = {
+  data: {
+    data: {
+      token: "...",
+      user: { ... }
+    },
+    message: "User logedin Successfully",
+    statusCode: 200,
+    success: true
+  },
+  ...
+} // so to access the data we have to write it (data.data)
+
+// Error Validation 
+-------------------
+  if (password.length < 5) {
+    setError('Password must be at least 5 characters long.');
+    return; // Stop form submission
+  }
+  setError(''); // Clear error if valid
+*/
