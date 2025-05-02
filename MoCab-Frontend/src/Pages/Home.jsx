@@ -7,6 +7,7 @@ import LocationSearchPanel from '../Components/LocationSearchPanel'
 import VehiclePanel from '../Components/VehiclePanel.jsx'
 import ConfirmRide from '../Components/ConfirmRide.jsx'
 import LookingDriver from '../Components/LookingDriver.jsx'
+import WaitingDriver from '../Components/WaitingDriver.jsx'
 
 const Home = () => {
   const [pick, setPick] = useState("")
@@ -14,13 +15,15 @@ const Home = () => {
   const [panelOpen, setPanelOpen] = useState(false)
   const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false)
   const [confirmRidePanelOpen, setConfirmRidePanelOpen] = useState(false)
-  const [vehicleFound, setVehicleFound] = useState()
+  const [vehicleFound, setVehicleFound] = useState(false)
+  const [waitingForDriver, setWaitingForDriver] = useState(false)
 
   const panelRef = useRef(null)
   const panelCloseRef = useRef(null)
   const vehicleRef = useRef(null)
   const confirmRideRef = useRef(null)
   const vehicleFoundRef = useRef(null)
+  const driverFoundRef = useRef(null)
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -49,7 +52,7 @@ const Home = () => {
   useGSAP(function() {
     if(vehiclePanelOpen){
       gsap.to(vehicleRef.current,{
-        transform: 'translateY(0)'
+        transform: 'translate(0,0)'
       })
     }else{
       gsap.to(vehicleRef.current,{
@@ -82,10 +85,22 @@ const Home = () => {
     }
   },[vehicleFound])
 
+  useGSAP(function() {
+    if(waitingForDriver){
+      gsap.to(driverFoundRef.current,{
+        transform: 'translate(0,0)'
+      })
+    }else{
+      gsap.to(driverFoundRef.current,{
+        transform: 'translateY(100%)'
+      })
+    }
+  },[waitingForDriver])
+
 
   return (
     <div className='h-screen relative overflow-hidden'>
-      <img src={Logo} alt="MoCaB" className='w-24 absolute left-1 top-1' />
+      <img src={Logo} alt="MoCaB" className='w-24 fixed left-1 top-1' />
       <div className='h-screen w-screen'>
         <img src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" className='h-full w-full object-cover' />
       </div>
@@ -144,7 +159,10 @@ const Home = () => {
         <ConfirmRide setVehiclePanelOpen={setVehiclePanelOpen} setConfirmRidePanelOpen={setConfirmRidePanelOpen} setVehicleFound={setVehicleFound}/>
       </div>  
       <div ref={vehicleFoundRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
-        <LookingDriver setConfirmRidePanelOpen={setConfirmRidePanelOpen} setVehicleFound={setVehicleFound} />
+        <LookingDriver setConfirmRidePanelOpen={setConfirmRidePanelOpen} setVehicleFound={setVehicleFound} setWaitingForDriver={setWaitingForDriver}/>
+      </div>  
+      <div ref={driverFoundRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
+        <WaitingDriver setVehicleFound={setVehicleFound} setWaitingForDriver={setWaitingForDriver} />
       </div>  
     </div>
   )

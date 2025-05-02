@@ -8,6 +8,8 @@ import UserSignUp from './Pages/UserSignUp.jsx'
 import Home from './Pages/Home.jsx'
 import UserProtectWrapper from './Pages/UserProtectWrapper.jsx'
 import UserLogout from './Pages/UserLogout.jsx'
+import Ride from './Pages/Ride.jsx'
+
 function App() {
 
   return (
@@ -18,6 +20,7 @@ function App() {
         <Route path='CaptainSignUp' element={<CaptainSignUp/>}></Route>
         <Route path='UserLogin' element={<UserLogin/>}></Route>
         <Route path='UserSignUp' element={<UserSignUp/>}></Route>
+        <Route path='Ride' element={<Ride/>}></Route>
         <Route path='/home' element={
           // <UserProtectWrapper>
           //   <Home/>
