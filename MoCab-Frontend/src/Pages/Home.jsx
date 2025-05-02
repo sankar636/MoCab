@@ -4,15 +4,17 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import 'remixicon/fonts/remixicon.css'
 import LocationSearchPanel from '../Components/LocationSearchPanel'
-
+import VehiclePanel from '../Components/VehiclePanel.jsx'
 
 const Home = () => {
   const [pick, setPick] = useState("")
   const [destination, setDestination] = useState('')
   const [panelOpen, setPanelOpen] = useState(false)
+  const [vehiclePanelOpen, setVehiclePanelOpen] = useState(false)
 
   const panelRef = useRef(null)
   const panelCloseRef = useRef(null)
+  const vehicleRef = useRef(null)
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -37,6 +39,18 @@ const Home = () => {
       })
     }
   }, [panelOpen])
+
+  useGSAP(function() {
+    if(vehiclePanelOpen){
+      gsap.to(vehicleRef.current,{
+        transform: 'translateY(0)'
+      })
+    }else{
+      gsap.to(vehicleRef.current,{
+        transform: 'translateY(100%)'
+      })
+    }
+  },[vehiclePanelOpen])
 
   return (
     <div className='h-screen relative overflow-hidden'>
@@ -71,7 +85,7 @@ const Home = () => {
             <input
               type="text"
               value={pick}
-              onClick={(e) => {
+              onChange={(e) => {
                 setPick(e.target.value)
               }}
               className="bg-[#eee] mt-2 px-6 py-3 text-base w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition"
@@ -80,7 +94,7 @@ const Home = () => {
             <input
               type="text"
               value={destination}
-              onClick={(e) => {
+              onChange={(e) => {
                 setDestination(e.target.value)
               }}
               className="bg-[#eeeeee] mt-2 px-6 py-3 text-base w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition"
@@ -89,11 +103,11 @@ const Home = () => {
           </form>
         </div>
         <div ref={panelRef} className='h-0 bg-white'>
-              <LocationSearchPanel/>
+              <LocationSearchPanel  setVehiclePanelOpen={setVehiclePanelOpen} setPanelOpen={setPanelOpen}/>
         </div>
       </div>
-      <div>
-        
+      <div ref={vehicleRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
+        <VehiclePanel setVehiclePanelOpen={setVehiclePanelOpen}setPanelOpen={setPanelOpen} />
       </div>
     </div>
   )
@@ -104,4 +118,5 @@ export default Home
 
 /*
 GSAP is an animation library which provides hook
+NOTE--> position static is prevent bottom-0 to show the div so used fixed
 */
