@@ -4,7 +4,7 @@ import Auto from '../assets/Auto.webp';
 import Bike from '../assets/Bike.webp';
 
 const VehiclePanel = (props) => {
-    console.log("Props: ", props);
+    // console.log("Props: ", props);
     
     const vehicles = [
         {
@@ -40,13 +40,16 @@ const VehiclePanel = (props) => {
             className='absolute top-1 right-1/2 text-2xl font-semibold'
             onClick={() => {
                 props.setVehiclePanelOpen(false)
-                // props.setPanelOpen(true)
             }}
             ><i className="ri-arrow-down-wide-line"></i></h1>
             {vehicles.map((vehicle, index) => (
                 <div
                     key={index}
                     className="flex p-3 mt-2 w-full items-center justify-between border-2 border-gray-300 hover:border-black rounded-xl transition duration-200"
+                    onClick={() => {
+                        props.setConfirmRidePanelOpen(true)
+                        props.setVehiclePanelOpen(false)
+                    }}
                 >
                     <img className="h-[60px] w-[25%]" src={vehicle.image} alt={vehicle.name} />
                     <div className="w-1/2">
