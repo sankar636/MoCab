@@ -51,7 +51,7 @@ const UserSignUp = () => {
       const response = await axios.post(`${baseURL}/user/register`, newUserData);
       console.log("Registered:", response);
     
-      if (response.status === 201) {
+      if (response.status === 200) {
         const data = response.data.data;
         setUser(data.user); 
         console.log(data.token);        
@@ -177,4 +177,13 @@ I set the data = response.data.data because of the structure of storing of data 
     return; // Stop form submission
   }
   setError(''); // Clear error if valid
+
+  --------------------------------
+  setUser(data.user);  --> setUser comes from UserContext and this update the context. The Context can be used globally for the Program
+
+  localStorage.setItem('token', data.token) ---> this set the token in the localstorage in client side which can be ensure the connection between client and server will not affect
+  ------------------------------------
+  setUser(data.user);  here i used user because in backend at the time of register i created the Useer data as user(check userrController->register>user(create))
+
+
 */

@@ -1,26 +1,40 @@
-import React from 'react'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const UserLogout = () => {
+    const navigate = useNavigate();
+    const token = localStorage.getItem('token');
+    const baseURL = import.meta.env.VITE_BASE_URL;
+    // console.log("User Logout Token",token);
 
-    const token = localStorage.getItem('token')
-    const navigate = useNavigate()
+    useEffect(() => {
+        const logoutUser = async () => {
 
-    axios.get(`${import.meta.env.VITE_BASE_URL}/user/logout`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }).then((response) => {
-        if (response.status === 200) {
-            localStorage.removeItem('token')
-            navigate('/UserLogin')
-        }
-    })
+            try {
+                console.log("Hello UserLogout");
+                const response = await axios.post(`${baseURL}/user/logout`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                console.log("UserLogout ", response);
 
-    return (
-        <div>UserLogout</div>
-    )
-}
+                if (response.status === 200) {
+                    localStorage.removeItem('token');
+                    navigate('/UserLogin');
+                }
+                console.log("logoutUser successfully");                
+            } catch (err) {
+                // console.error('Error While Logout The User', err);
+                console.error('Error While Logout The User', err.response);
+            }
+        };
 
-export default UserLogout
+        logoutUser();
+    }, [navigate, token, baseURL]);
+
+    return <div>UserLogout</div>;
+};
+
+export default UserLogout;

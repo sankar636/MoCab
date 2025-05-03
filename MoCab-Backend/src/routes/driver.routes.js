@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { body } from "express-validator";
+import { verifyDriverJWT } from "../middlewares/auth.middleware.js";
 
 const router = Router()
 
@@ -26,8 +27,8 @@ router.route('/login').post(
     ],
     loginDriver
 )
-// router.route('/profile').get(verifyDriverJWT,driverProfile)
+router.route('/profile').get(verifyDriverJWT,driverProfile)
 
-// router.route('/logout').post(verifyDriverJWT,logoutDriver)
+router.route('/logout').post(verifyDriverJWT,logoutDriver)
 
 export default router

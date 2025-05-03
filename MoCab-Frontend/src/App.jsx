@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+
 import Start from './Pages/Start.jsx'
 import CaptainLogin from './Pages/CaptainLogin.jsx'
 import CaptainSignUp from './Pages/CaptainSignUp.jsx'
@@ -9,6 +11,9 @@ import Home from './Pages/Home.jsx'
 import UserProtectWrapper from './Pages/UserProtectWrapper.jsx'
 import UserLogout from './Pages/UserLogout.jsx'
 import Ride from './Pages/Ride.jsx'
+import CaptainProtectWrapper from './Pages/CaptainProtectWrapper.jsx'
+import CaptainHome from './Pages/CaptainHome.jsx'
+import CaptainLogout from './Pages/CaptainLogout.jsx'
 
 function App() {
 
@@ -22,17 +27,30 @@ function App() {
         <Route path='UserSignUp' element={<UserSignUp/>}></Route>
         <Route path='Ride' element={<Ride/>}></Route>
         <Route path='/home' element={
-          // <UserProtectWrapper>
+          <UserProtectWrapper>
           //   <Home/>
-          // </UserProtectWrapper>
-          <Home/>
+          </UserProtectWrapper>
+          // <Home/>
           }>
           </Route>
           <Route path='/user/logout' element={
             <UserProtectWrapper>
               <UserLogout/>
             </UserProtectWrapper>
-            }></Route>
+            }>   
+            </Route>
+          <Route path='/captain-home' element={
+            <CaptainProtectWrapper>
+              <CaptainHome/>
+            </CaptainProtectWrapper>
+            }>   
+            </Route>
+          <Route path='/driver/logout' element={
+            <CaptainProtectWrapper>
+              <CaptainLogout/>
+            </CaptainProtectWrapper>
+            }>   
+            </Route>
       </Routes>
     </BrowserRouter>
   )

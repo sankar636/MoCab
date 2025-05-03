@@ -44,8 +44,7 @@ const UserLogin = () => {
       }
     } catch (err) {
       console.error("Error while Login user:", err);
-      console.log("Login Error:", err.message);
-      
+      // console.log("Login Error:", err.message);
     }
 
     // After the form submit email and password set to empty

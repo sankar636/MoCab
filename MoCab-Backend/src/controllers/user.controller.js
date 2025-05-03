@@ -13,7 +13,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!errors.isEmpty()) {  // i.e if error is not empty(means there is some error in body of userRouter)
         return res.status(400).json(new ApiError(400, "Validation   errors", errors.array()));
     }
-    
+
     const { fullname, email, password } = req.body
     // don't need to hash password as password already hashed in user.model
     // Check if a user with the same email already exists
@@ -22,22 +22,22 @@ const registerUser = asyncHandler(async (req, res) => {
         return res.status(409).json(new ApiError(409, "User with this email already exists"));
     }
     const user = await createUser(
-       {
-        firstname:fullname.firstname,
-        lastname:fullname.lastname,
-        email,
-        password
-       }
+        {
+            firstname: fullname.firstname,
+            lastname: fullname.lastname,
+            email,
+            password
+        }
     )
-    console.log("User Data ",user);    
-    if(!user){
-        throw new ApiError(400,"User Not created")
+    console.log("User Data ", user);
+    if (!user) {
+        throw new ApiError(400, "User Not created")
     }
     // Generate auth token for the created user
     const token = await user.generateAuthToken();
     console.log("Generated token", token);
 
-    return res.status(201).json(
+    return res.status(200).json(
         new ApiResponse(200, "User Registered Successfully", { user, token },)
     )
 })
@@ -89,7 +89,8 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
             req.user
         )
 })
-
+/*
+// this part cause error
 const logoutUser = asyncHandler(async (req, res, next) => {
     res.clearCookie('token')
 
@@ -102,6 +103,27 @@ const logoutUser = asyncHandler(async (req, res, next) => {
             new ApiResponse(200, "User Loged Out")
         )
 })
+*/
+const logoutUser = asyncHandler(async (req, res, next) => {
+    res.clearCookie('token');
+
+    const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
+
+    try {
+        await BlacklistedToken.create({ token });
+    } catch (error) {
+        if (error.code === 11000) {
+            // Duplicate token (already blacklisted)
+            console.warn("Token is already blacklisted");
+        } else {
+            throw error; // Let asyncHandler deal with other errors
+        }
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "User Logged Out")
+    );
+});
 
 export {
     registerUser,

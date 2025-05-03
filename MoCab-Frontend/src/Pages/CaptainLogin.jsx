@@ -1,24 +1,51 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../assets/DriverLogo.png'
+import axios from 'axios'
+import { CaptainDataContext } from '../Context/CaptainContext'
 const CaptainLogin = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [driverData, setDriverData] = useState({})
+  // const [driverData, setDriverData] = useState({})
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate()
+  const { driver, setDriver} = useContext(CaptainDataContext)
+
+  const submitHandler = async(e) => {
     e.preventDefault();
-    console.log("Form Sbmited Successfully");    
     //set userData
-    setDriverData({
+    // setDriverData({
+    //   email: email,
+    //   password: password
+    // })
+    // console.log(driverData);
+    const driverData = {
       email: email,
       password: password
-    })
-    console.log(driverData);
+    }
+    const baseURL= import.meta.env.VITE_BASE_URL
+    try {
+      const response = await axios.post(`${baseURL}/driver/login`,driverData)
+      console.log("Login Driver",response);
+
+      if(response.status === 200){
+        const data = response.data.data;
+        console.log("Driver Data",data);
+        setDriver(data.driver)
+        localStorage.setItem('token',data.token)
+        navigate('/captain-home')
+      }
+      // setDriver(response)
+    } catch (error) {
+      console.log("Error While Login Captain");
+      
+    }
     
     // After the form submit email and password set to empty
     setEmail("")
     setPassword("")
+    console.log("Form Sbmited Successfully");    
+
   }
   return (
     <div className='flex h-screen flex-col justify-between'>

@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Logo from '../assets/Logo1.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { CaptainDataContext } from '../Context/CaptainContext.jsx'
+
 const CaptainSignUp = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -10,12 +13,16 @@ const CaptainSignUp = () => {
   const [vehiclePlate, setVehiclePlate] = useState("")
   const [vehicleType, setVehicleType] = useState("")
   const [vehicleCapacity, setVehicleCapacity] = useState("")
-  const [driverData, setDriverData] = useState({})
+  // const [driverData, setDriverData] = useState({})
   
+  const { driver, setDriver } = useContext(CaptainDataContext)
 
-  const submitHandler = (e) => {
+  const navigate = useNavigate()
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     console.log("Form Sbmited Successfully");
+    /*
     //set userData
     setDriverData({
       email: email,
@@ -33,7 +40,42 @@ const CaptainSignUp = () => {
       }
     })
     // console.log(driverData);
+    */
+    const newDriverData = {
+      email: email,
+      password: password,
+      fullname: {
+        firstname: firstname,
+        lastname: lastname
+      },
+      // there is no need for state like fullname, vehicle
+      vehicle: {
+        color: vehicleColor,
+        plate: vehiclePlate,
+        vehicleType: vehicleType,
+        capacity: vehicleCapacity
+      }
+    }
+    console.log("Vehicle Type: ",vehicleType);
     
+    const baseURL = import.meta.env.VITE_BASE_URL;
+    try {
+      // console.log("Error Before Registratation");      
+      const response = await axios.post(`${baseURL}/driver/register`,newDriverData)
+      // console.log("Driver Registratation: ",response);     
+      if(response.status === 200){
+        const data = response.data.data;
+        console.log("DATA",data);
+        setDriver(data.newDriver)
+        localStorage.setItem('token',data.token)
+        navigate('/captain-home')
+      } 
+    } catch (error) {
+      console.log("Error While Registering the Driver", error);
+      
+    } 
+
+
     // After the form submit email and password set to empty
     setEmail("")
     setPassword("")
@@ -131,14 +173,15 @@ const CaptainSignUp = () => {
                 className='bg-[#eeeeee] rounded px-4 py-2 border w-full text-lg placeholder:text-base'
               />
               <select className='bg-[#eeeeee]'
+              value={vehicleType}
               onChange={(e) => {
                 setVehicleType(e.target.value)
               }}
               >
                 <option value="" disabled>Select Vehicle Type</option>
                 <option value='car'>Car</option>
-                <option value='Bike'>Bike</option>
-                <option value='Auto'>Auto</option>
+                <option value='bike'>Bike</option>
+                <option value='auto'>Auto</option>
               </select>
             </div>
           </div>
@@ -158,3 +201,6 @@ const CaptainSignUp = () => {
 }
 
 export default CaptainSignUp
+
+
+// setDriver(data.newDriver)  ---> here i used newDriver because in backend at the time of register i created the driver data as newDriver(check driverController->register>newDriver(create))
