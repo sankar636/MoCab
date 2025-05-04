@@ -22,7 +22,7 @@ const CaptainProtectWrapper = ({ children }) => {
       Authorization: `Bearer ${token}`
     }
   }).then(response => {
-      console.log("Captain Protected Wrapper",response)
+      // console.log("Captain Protected Wrapper",response)
       if(response.status === 200){
         setDriver(response.data)
         setIsLoading(false)

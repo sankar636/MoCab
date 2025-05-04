@@ -26,7 +26,7 @@ const CaptainLogin = () => {
     const baseURL= import.meta.env.VITE_BASE_URL
     try {
       const response = await axios.post(`${baseURL}/driver/login`,driverData)
-      console.log("Login Driver",response);
+      // console.log("Login Driver",response);
 
       if(response.status === 200){
         const data = response.data.data;
