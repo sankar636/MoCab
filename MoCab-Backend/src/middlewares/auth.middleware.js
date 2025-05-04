@@ -21,7 +21,8 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     if(isBlacklistedToken){
         throw new ApiError(400,"Token has been blacklisted")
     }
-
+    console.log("At UserJwtmiddleware");
+    
     try {
         // console.log("JWT_SECRET: ", process.env.JWT_SECRET);
         const decoded = jwt.verify(token, process.env.JWT_SECRET);

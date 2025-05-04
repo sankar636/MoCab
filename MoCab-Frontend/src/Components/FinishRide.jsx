@@ -1,18 +1,13 @@
 import React from 'react'
 import DriverProfile from '../assets/DriverProfile.jpg'
-
-const RidePopUp = (props) => {
-    // console.log("RidePopUp", props);
+import { Link } from 'react-router-dom'
+const FinishRide = () => {
+    const submitHandeler = (e) => {
+        e.prevendDefault()
+    }
     return (
         <div>
-            <h1
-                className='absolute top-1 right-1/2 text-2xl font-semibold'
-                onClick={() => {
-                    props.setRidePopUpPanel(false)
-                }}
-            ><i className="ri-arrow-down-wide-line"></i>
-            </h1>
-            <h1 className='flex justify-start py-3 items-center text-3xl'>New Ride Available</h1>
+            <h1 className='flex justify-start py-3 items-center text-3xl'>Finish The Ride</h1>
             <div className="flex items-center justify-between px-3 py-4 border-b-2 bg-yellow-300">
                 <div>
                     <img src={DriverProfile} alt="Driver" className="w-16 h-16 rounded-full object-cover" />
@@ -46,22 +41,11 @@ const RidePopUp = (props) => {
                 </div>
             </div>
             <hr className="border-t-2 border-gray-300" />
-            <button 
-            onClick={() => {
-                props.setRidePopUpPanel(false)
-                props.setConfirmRidePopUpPanel(true)
-
-            }}
-            className='w-full bg-green-400 py-2 font-semibold rounded-xl mt-2'
-            >Accept</button>
-            <button 
-            onClick={() => {
-                props.setRidePopUpPanel(false)                
-            }}
-            className='w-full bg-red-500 py-2 font-semibold rounded-xl mt-2'
-            >Ignore</button>
+                <Link to='/captain-home' className='w-full bg-green-400 py-2 font-semibold rounded-xl mt-2 flex justify-center'
+                >Finish Ride</Link>
+                <p className='text-red-500 text-sm'>Click On Finish Ride If You Have Completed The Payment</p>
         </div>
     )
 }
 
-export default RidePopUp
+export default FinishRide

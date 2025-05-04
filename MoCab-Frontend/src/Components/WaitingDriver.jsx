@@ -9,7 +9,7 @@ const WaitingDriver = (props) => {
             <h1
                 className='absolute top-1 right-1/2 text-2xl font-semibold'
                 onClick={() => {
-                    props.setWaitingForDriverFound(false)
+                    props.setWaitingForDriver(false)
                 }}
             ><i className="ri-arrow-down-wide-line"></i>
             </h1>

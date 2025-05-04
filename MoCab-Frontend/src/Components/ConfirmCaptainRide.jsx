@@ -1,14 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import DriverProfile from '../assets/DriverProfile.jpg'
-
-const RidePopUp = (props) => {
-    // console.log("RidePopUp", props);
+import { Link } from 'react-router-dom';
+const ConfirmCaptainRide = (props) => {
+    // console.log(props);    
+    const [otp, setOtp] = useState("")
+    const submitHandeler = (e) => {
+        e.prevendDefault()
+    }
     return (
         <div>
             <h1
                 className='absolute top-1 right-1/2 text-2xl font-semibold'
                 onClick={() => {
-                    props.setRidePopUpPanel(false)
+                    // props.setRidePopUpPanel(false)
+                    props.setConfirmRidePopUpPanel(false)
                 }}
             ><i className="ri-arrow-down-wide-line"></i>
             </h1>
@@ -46,22 +51,28 @@ const RidePopUp = (props) => {
                 </div>
             </div>
             <hr className="border-t-2 border-gray-300" />
-            <button 
-            onClick={() => {
-                props.setRidePopUpPanel(false)
-                props.setConfirmRidePopUpPanel(true)
-
-            }}
-            className='w-full bg-green-400 py-2 font-semibold rounded-xl mt-2'
-            >Accept</button>
-            <button 
-            onClick={() => {
-                props.setRidePopUpPanel(false)                
-            }}
-            className='w-full bg-red-500 py-2 font-semibold rounded-xl mt-2'
-            >Ignore</button>
+            <form onSubmit={(e) => {
+                submitHandeler(e)
+            }}>
+                <input type="text" placeholder='Enter OTP'
+                value={otp}
+                onChange={(e) => {
+                    setOtp(e.target.value)
+                }}
+                className='bg-[#eeeeee] rounded px-4 py-2 border w-full text-lg placeholder:text-base'
+                />
+                <Link to='/captain-ride' className='w-full bg-green-400 py-2 font-semibold rounded-xl mt-2 flex justify-center'
+                >Confirm</Link>
+                <button
+                    onClick={() => {
+                        props.setRidePopUpPanel(false)
+                        props.setConfirmRidePopUpPanel(false)
+                    }}
+                    className='w-full bg-red-500 py-2 font-semibold rounded-xl mt-2'
+                >Cancel</button>
+            </form>
         </div>
     )
 }
 
-export default RidePopUp
+export default ConfirmCaptainRide

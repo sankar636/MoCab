@@ -106,9 +106,9 @@ const logoutUser = asyncHandler(async (req, res, next) => {
 */
 const logoutUser = asyncHandler(async (req, res, next) => {
     res.clearCookie('token');
-
+    
     const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
-
+    log("Token At Controller",token)
     try {
         await BlacklistedToken.create({ token });
     } catch (error) {

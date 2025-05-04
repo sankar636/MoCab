@@ -14,6 +14,7 @@ import Ride from './Pages/Ride.jsx'
 import CaptainProtectWrapper from './Pages/CaptainProtectWrapper.jsx'
 import CaptainHome from './Pages/CaptainHome.jsx'
 import CaptainLogout from './Pages/CaptainLogout.jsx'
+import CaptainRide from './Pages/CaptainRide.jsx'
 
 function App() {
 
@@ -23,27 +24,28 @@ function App() {
         <Route path='/' element={<Start />}></Route>
         <Route path='CaptainLogin' element={<CaptainLogin/>}></Route>
         <Route path='CaptainSignUp' element={<CaptainSignUp/>}></Route>
+        <Route path='captain-ride' element={<CaptainRide/>}></Route>
         <Route path='UserLogin' element={<UserLogin/>}></Route>
         <Route path='UserSignUp' element={<UserSignUp/>}></Route>
         <Route path='Ride' element={<Ride/>}></Route>
         <Route path='/home' element={
           <UserProtectWrapper>
-          //   <Home/>
+             <Home/>
           </UserProtectWrapper>
           // <Home/>
           }>
           </Route>
-          <Route path='/user/logout' element={
+          {/* <Route path='/user/logout' element={
             <UserProtectWrapper>
               <UserLogout/>
             </UserProtectWrapper>
             }>   
-            </Route>
+            </Route> */}
           <Route path='/captain-home' element={
-            // <CaptainProtectWrapper>
-            //   <CaptainHome/>
-            // </CaptainProtectWrapper>
+            <CaptainProtectWrapper>
               <CaptainHome/>
+            </CaptainProtectWrapper>
+              // <CaptainHome/>
             }>   
             </Route>
           <Route path='/driver/logout' element={
