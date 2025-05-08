@@ -72,7 +72,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     const token = await user.generateAuthToken()
-    console.log("Generated Token", token);
+    // console.log("Generated Token", token);
 
     res.cookie('token', token,
         { httpOnly: true, }
@@ -84,9 +84,13 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const getUserProfile = asyncHandler(async (req, res, next) => {
+    const userProfile = req.user
+    if(!userProfile){
+        throw new ApiError(401, "user profile not found")
+    }
     return res.status(200)
         .json(
-            req.user
+            userProfile
         )
 })
 /*
@@ -105,18 +109,21 @@ const logoutUser = asyncHandler(async (req, res, next) => {
 })
 */
 const logoutUser = asyncHandler(async (req, res, next) => {
-    res.clearCookie('token');
-    
+    res.clearCookie('token')
+    // Get token BEFORE clearing it
     const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");
-    log("Token At Controller",token)
-    try {
-        await BlacklistedToken.create({ token });
-    } catch (error) {
-        if (error.code === 11000) {
-            // Duplicate token (already blacklisted)
-            console.warn("Token is already blacklisted");
-        } else {
-            throw error; // Let asyncHandler deal with other errors
+    console.log("Token At Controller", token);
+
+    // Blacklist the token if it exists
+    if (token) {
+        try {
+            await BlacklistedToken.create({token}) 
+        }catch (error) {
+            if (error.code === 11000) {
+                console.warn("Token is already blacklisted");
+            } else {
+                throw error;
+            }
         }
     }
 
@@ -124,6 +131,7 @@ const logoutUser = asyncHandler(async (req, res, next) => {
         new ApiResponse(200, "User Logged Out")
     );
 });
+
 
 export {
     registerUser,

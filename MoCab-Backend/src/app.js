@@ -27,8 +27,11 @@ import userRouter from './routes/user.routes.js'
 app.use('/user', userRouter)
 
 import driverRouter from './routes/driver.routes.js'
-//routes dexlaration for driver
+//routes declaration for driver
 app.use('/driver',driverRouter)
+//Routes decclaration of map
+import mapRouter from './routes/map.routes.js'
+app.use('/map',mapRouter)
 
 
 export { app } 

@@ -22,38 +22,38 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Start />}></Route>
-        <Route path='CaptainLogin' element={<CaptainLogin/>}></Route>
-        <Route path='CaptainSignUp' element={<CaptainSignUp/>}></Route>
-        <Route path='captain-ride' element={<CaptainRide/>}></Route>
-        <Route path='UserLogin' element={<UserLogin/>}></Route>
-        <Route path='UserSignUp' element={<UserSignUp/>}></Route>
-        <Route path='Ride' element={<Ride/>}></Route>
+        <Route path='CaptainLogin' element={<CaptainLogin />}></Route>
+        <Route path='CaptainSignUp' element={<CaptainSignUp />}></Route>
+        <Route path='captain-ride' element={<CaptainRide />}></Route>
+        <Route path='UserLogin' element={<UserLogin />}></Route>
+        <Route path='UserSignUp' element={<UserSignUp />}></Route>
+        <Route path='Ride' element={<Ride />}></Route>
         <Route path='/home' element={
           <UserProtectWrapper>
-             <Home/>
+            <Home />
           </UserProtectWrapper>
           // <Home/>
-          }>
-          </Route>
-          {/* <Route path='/user/logout' element={
-            <UserProtectWrapper>
-              <UserLogout/>
-            </UserProtectWrapper>
-            }>   
-            </Route> */}
-          <Route path='/captain-home' element={
-            <CaptainProtectWrapper>
-              <CaptainHome/>
-            </CaptainProtectWrapper>
-              // <CaptainHome/>
-            }>   
-            </Route>
-          <Route path='/driver/logout' element={
-            <CaptainProtectWrapper>
-              <CaptainLogout/>
-            </CaptainProtectWrapper>
-            }>   
-            </Route>
+        }>
+        </Route>
+        <Route path='/user/logout' element={
+          <UserProtectWrapper>
+            <UserLogout />
+          </UserProtectWrapper>
+        }>
+        </Route>
+        <Route path='/captain-home' element={
+          <CaptainProtectWrapper>
+            <CaptainHome />
+          </CaptainProtectWrapper>
+          // <CaptainHome/>
+        }>
+        </Route>
+        <Route path='/driver/logout' element={
+          <CaptainProtectWrapper>
+            <CaptainLogout />
+          </CaptainProtectWrapper>
+        }>
+        </Route>
       </Routes>
     </BrowserRouter>
   )

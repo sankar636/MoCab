@@ -12,7 +12,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 
     const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "")
 
-    console.log("Token", token);
+    // console.log("Token", token);
     if (!token) {
         throw new ApiError(400, "Unauthorized request")
     }
@@ -21,21 +21,22 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
     if(isBlacklistedToken){
         throw new ApiError(400,"Token has been blacklisted")
     }
-    console.log("At UserJwtmiddleware");
+    // console.log("At UserJwtmiddleware");
     
     try {
         // console.log("JWT_SECRET: ", process.env.JWT_SECRET);
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         // console.log("Decoded: ",decoded);
         
-        const user = await User.findById(decoded?._id).select("-password");
+        const user = await User.findById(decoded?._id)
 
         if (!user) {
             throw new ApiError(401, "Invalid token");
         }
 
         req.user = user;
-        next();  // Continue to next middleware/handler
+
+        return next();  // Continue to next middleware/handler
     } catch (error) {
         // throw new ApiError(401, "Invalid or expired token");
         if (error.name === 'TokenExpiredError') {
@@ -85,7 +86,8 @@ export const verifyDriverJWT = asyncHandler(async (req, res, next) => {
         }
 
         req.driver = driver;
-        next();  // Continue to next middleware/handler
+        
+        return next();  // Continue to next middleware/handler
     } catch (error) {
         // throw new ApiError(401, "Invalid or expired token");
         if (error.name === 'TokenExpiredError') {

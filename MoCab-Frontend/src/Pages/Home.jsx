@@ -9,7 +9,7 @@ import VehiclePanel from '../Components/VehiclePanel.jsx'
 import ConfirmRide from '../Components/ConfirmRide.jsx'
 import LookingDriver from '../Components/LookingDriver.jsx'
 import WaitingDriver from '../Components/WaitingDriver.jsx'
-import LogoutButton from '../Components/LogoutButton.jsx'
+// import LogoutButton from '../Components/LogoutButton.jsx'
 
 const Home = () => {
   const [pick, setPick] = useState("")
@@ -104,7 +104,7 @@ const Home = () => {
     <div className='h-screen relative overflow-hidden'>
       <div className='fixed px-3 top-0 flex items-center justify-between w-screen'>
         <img src={Logo} alt="MoCaB" className='w-24 ' />
-        <Link to='/user/logout' className='text-2xl h-10 rounded-full px-2 mb-2 bg-white flex items-center justify-end'>
+        <Link to= '/user/logout' className='text-2xl h-10 rounded-full px-2 mb-2 bg-white flex items-center justify-end'>
           <i className="ri-logout-box-r-line"></i>
         </Link>
         {/* <LogoutButton/> */}

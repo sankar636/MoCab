@@ -12,10 +12,11 @@ const UserProtectWrapper = ({
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
+        console.log("Token At User Profile",token);        
         if (!token) {
             navigate('/UserLogin')
         }
-
+        
         axios.get(`${import.meta.env.VITE_BASE_URL}/user/profile`, {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -26,8 +27,7 @@ const UserProtectWrapper = ({
                 setUser(response.data)
                 setIsLoading(false)
             }
-        })
-            .catch(err => {
+        }).catch(err => {
                 console.log(err)
                 localStorage.removeItem('token')
                 navigate('/UserLogin')

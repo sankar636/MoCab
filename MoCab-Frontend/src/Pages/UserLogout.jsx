@@ -5,19 +5,21 @@ import axios from 'axios';
 const UserLogout = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+    console.log("Get Token From the LocalStorage",token)
     const baseURL = import.meta.env.VITE_BASE_URL;
+    console.log("BaseUrl",baseURL);
+    
     // console.log("User Logout Token",token);
 
     useEffect(() => {
         const logoutUser = async () => {
-
             try {
                 console.log("Hello UserLogout");
                 const response = await axios.post(`${baseURL}/user/logout`, {}, {
                     headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    withCredentials: true
+                        Authorization: `Bearer ${token}`
+                    }
+                    // withCredentials: true
                 });
                 console.log("UserLogout ", response);
 
@@ -28,12 +30,13 @@ const UserLogout = () => {
                 console.log("logoutUser successfully");                
             } catch (err) {
                 // console.error('Error While Logout The User', err);
-                console.error('Error While Logout The User', err.response);
-            }finally {
-                console.log("Finally Executed");                
-                localStorage.removeItem('token');
-                navigate('/UserLogin');
+                console.error('Error While Logout The User', err);
             }
+            // finally {
+            //     console.log("Finally Executed");                
+            //     localStorage.removeItem('token');
+            //     navigate('/UserLogin');
+            // }
         };
 
         logoutUser();

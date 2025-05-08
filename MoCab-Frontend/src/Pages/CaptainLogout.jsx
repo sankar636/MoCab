@@ -12,7 +12,7 @@ const CaptainLogout = () => {
   useEffect(() => {
     const logoutDriver = async () => {
       try {
-        const response = await axios.post(`${baseURL}/driver/logout`,{}, {
+        const response = await axios.post(`${baseURL}/driver/logout`, {}, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -23,7 +23,7 @@ const CaptainLogout = () => {
           navigate('/CaptainLogin');
         }
       } catch (err) {
-        console.error('Error while logging out the driver:', err);
+        console.error('Error while logg out the driver:', err);
       }
     };
 

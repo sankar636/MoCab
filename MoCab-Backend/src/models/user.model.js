@@ -17,7 +17,9 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true,
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/]
     },
     phoneNo: {
         type: Number,
@@ -30,11 +32,6 @@ const userSchema = new Schema({
     },
     socketId:{
         type: String
-    },
-    role: {
-        type: String,
-        enum: ['driver', 'passenger', 'admin'],
-        default: 'passenger'
     },
     profilePicture: {
         type: String
