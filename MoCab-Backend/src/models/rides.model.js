@@ -3,57 +3,59 @@ import { Schema } from "mongoose";
 
 const ridesSchema = new Schema(
     {
-        passengerId: {
+        userId: {
             type: Schema.Types.ObjectId,
-            ref: "User"
+            ref: "User",
+            required: true
         },
         driverId: {
             type: Schema.Types.ObjectId,
-            ref: "User"
+            ref: "Driver"
         },
         pickupLocation: {
-            type: {
-                type: String,
-                enum: ['Point'],  // Must be 'Point' for GeoJSON
-                default: 'Point'
-            },
-            coordinates: {
-                type: [Number],  // Format: [longitude, latitude]
-                required: true
-            }
+            type: String,
+            required: true
         },
-        dropOffLocation: {
-            type: {
-                type: String,
-                enum: ['Point'],
-                default: 'Point'
-            },
-            coordinates: {
-                type: [Number],
-                required: true
-            }
+        destinationLocation: {
+            type: String,
+            required: true
         },
         status: {
             type: String,
-            enum: ['completed','requested','accepted','in-processed','cancelled']
+            enum: ['pending', , 'accepted', 'in-processed', 'completed', 'cancelled'],
+            default: 'pending',
         },
         fare: {
-            type: Number
+            type: Number,
+            required: true
         },
         distance: {   // In kiloMeter
             type: Number
         },
         duration: {
             type: Number // in minutes
+        },
+        paymentID: {
+            type: String,
+        },
+        orderId: {
+            type: String,
+        },
+        signature: {
+            type: String,
+        },
+
+        otp: {
+            type: String,
+            select: false,
+            required: true,
         }
     }, { timestamps: true }
 )
 
-ridesSchema.index({ pickupLocation: "2dsphere" });
-ridesSchema.index({ dropOffLocation: "2dsphere" });
+const Rides = mongoose.model("Rides", ridesSchema)
 
-export default Rides = mongoose.model("Rides", ridesSchema);
-
+export default Rides
 
 // Important --> GeoJSON
 //"This field contains GeoJSON data that represents a point on Earth. Optimize queries for real-world spherical geometry."

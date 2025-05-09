@@ -32,7 +32,7 @@ const distanceTime = asyncHandler(async (req, res, next) => {
 
     const { origin, destination } = req.query;
     const result = await getDistanceTime(origin, destination);
-
+    console.log("result", result);    
     if (!result) {
         throw new ApiError(400, "Distance and duration were not generated");
     }
@@ -45,7 +45,7 @@ const distanceTime = asyncHandler(async (req, res, next) => {
 
 const getAutoCompleteSuggession = asyncHandler(async ( req, res) => {
     const { input } = req.query
-    const suggession = await autoCompleteSuggession( input )
+    const suggession = await autoCompleteSuggession(input)
     if(!suggession){
         throw new ApiError(400,"Auto suggession result not found")
     }

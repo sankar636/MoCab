@@ -37,6 +37,9 @@ const getDistanceTime = async (origin, destination) => {
 
     const result = response.data.rows[0].elements[0];
     if (result.status === "OK") {
+        console.log("Distance",result.distance.text);
+        console.log("Duration",result.duration.text);
+        
         return {
             distance: result.distance.text,
             duration: result.duration.text
@@ -56,7 +59,7 @@ const autoCompleteSuggession = async (input) => {
                 key: apiKey
             }
         });
-        console.log("Response for auto complete suggession", response);
+        console.log("Response for auto complete suggession", response.data);
         
         if (response.data.status === 'OK') {
             return response.data.predictions
@@ -72,10 +75,16 @@ const autoCompleteSuggession = async (input) => {
 
 }
 
+const captainInTheRadious = async (lat, lng, radiou) => {
+    // find captain(driver) within 5 Km radius
+    
+}
+
 export {
     getAddressCoordinate,
     getDistanceTime,
-    autoCompleteSuggession
+    autoCompleteSuggession,
+    captainInTheRadious
 };
 
 

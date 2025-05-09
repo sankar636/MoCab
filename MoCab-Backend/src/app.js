@@ -33,5 +33,9 @@ app.use('/driver',driverRouter)
 import mapRouter from './routes/map.routes.js'
 app.use('/map',mapRouter)
 
+// router Declaration of Rides
+import rideRouter from './routes/rides.routes.js'
+app.use('/ride',rideRouter)
+
 
 export { app } 
