@@ -8,9 +8,9 @@ const VehiclePanel = (props) => {
     
     const vehicles = [
         {
-            name: 'SUV',
+            name: 'Car',
             image: Car,
-            fare: 194.5,
+            fare: props.fare.car,
             time: '2 min away',
             description: 'Compact Rides',
             seats: 6,
@@ -18,7 +18,7 @@ const VehiclePanel = (props) => {
         {
             name: 'Auto',
             image: Auto,
-            fare: 125,
+            fare: props.fare.auto,
             time: '2 min away',
             description: 'Affordable, Compact Rides',
             seats: 3,
@@ -26,7 +26,7 @@ const VehiclePanel = (props) => {
         {
             name: 'Bike',
             image: Bike,
-            fare: 90.5,
+            fare: props.fare.bike,
             time: '2 min away',
             description: 'Personal Experience',
             seats: 1,

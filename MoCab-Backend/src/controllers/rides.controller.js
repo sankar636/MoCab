@@ -1,5 +1,5 @@
 import asyncHandler from "../utils/AsyncHandler.js";
-import { createRide } from "../services/rides.service.js";
+import { createRide, getFare } from "../services/rides.service.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { validationResult } from "express-validator";
@@ -33,6 +33,29 @@ const createRideController = asyncHandler(async (req, res, next) => {
 
 })
 
+const getFareController = asyncHandler(async(req, res, next) => {
+    console.log(req.query);
+    
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) { 
+        return res.status(400).json(new ApiError(400, "Validation   errors", errors.array()));
+    }
+
+    const {pickup, destination} = req.query
+
+    if(!pickup || !destination){
+        throw new ApiError(400, "Pickup and destination fields are required")
+    }
+
+    const fare = await getFare(pickup, destination)
+
+    return res.status(200).json(
+        new ApiResponse(200,"Fare",{fare})
+    )
+})
+
+
 export {
-    createRideController
+    createRideController,
+    getFareController
 }

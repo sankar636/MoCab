@@ -59,7 +59,7 @@ const autoCompleteSuggession = async (input) => {
                 key: apiKey
             }
         });
-        console.log("Response for auto complete suggession", response.data);
+        // console.log("Response for auto complete suggession", response.data);
         
         if (response.data.status === 'OK') {
             return response.data.predictions

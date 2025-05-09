@@ -85,7 +85,9 @@ const createRide = async(
 }
 
 const confirmRide = async({rideId, driver}) => {
+    // if(!rideId || !driver){
 
+    // }
 }
 
 const startRide = async({ rideId, otp, driver}) => {
