@@ -28,6 +28,7 @@ function App() {
         <Route path='UserLogin' element={<UserLogin />}></Route>
         <Route path='UserSignUp' element={<UserSignUp />}></Route>
         <Route path='Ride' element={<Ride />}></Route>
+        {/* <Route path='/user/logout' element={<UserLogout />} /> */}
         <Route path='/home' element={
           <UserProtectWrapper>
             <Home />
@@ -35,6 +36,7 @@ function App() {
           // <Home/>
         }>
         </Route>
+
         <Route path='/user/logout' element={
           <UserProtectWrapper>
             <UserLogout />

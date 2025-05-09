@@ -13,6 +13,11 @@ const UserLogout = () => {
 
     useEffect(() => {
         const logoutUser = async () => {
+            if (!token) {
+                console.error("No token found. Redirecting to login.");
+                navigate('/UserLogin');
+                return;
+            }
             try {
                 console.log("Hello UserLogout");
                 const response = await axios.post(`${baseURL}/user/logout`, {}, {

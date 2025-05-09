@@ -101,79 +101,117 @@ const Home = () => {
 
 
   return (
-    <div className='h-screen relative overflow-hidden'>
-      <div className='fixed px-3 top-0 flex items-center justify-between w-screen'>
-        <img src={Logo} alt="MoCaB" className='w-24 ' />
-        <Link to= '/user/logout' className='text-2xl h-10 rounded-full px-2 mb-2 bg-white flex items-center justify-end'>
+    <div className="relative h-screen overflow-hidden"
+    style={{ backgroundImage: "url('https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif')" }}
+    >
+
+      {/* ✅ HEADER moved to top with high z-index */}
+      <div className="fixed top-0 left-0 w-full px-3 flex items-center justify-between h-[60px] z-[9999]" 
+      
+      >
+        <img src={Logo} alt="MoCaB" className="w-24" />
+        <Link
+          to="/user/logout"
+          className="text-2xl h-10 rounded-full px-2 bg-white flex items-center justify-end cursor-pointer"
+        >
           <i className="ri-logout-box-r-line"></i>
         </Link>
-        {/* <LogoutButton/> */}
       </div>
-      <div className='h-screen w-screen'>
-        <img src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" className='h-full w-full object-cover' />
 
-      </div>
-      <div className="absolute top-0 left-0 h-screen w-full flex flex-col justify-end">
+      {/* ✅ PUSH MAIN CONTENT DOWN BY HEADER HEIGHT */}
+      <div className="pt-[60px]">
+        <div className="h-screen w-screen">
+          <img
+            src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        </div>
+
+        {/* Background overlay panel */}
+        <div className="absolute top-0 left-0 h-screen w-full flex flex-col justify-end z-0 ">
+          <div className="h-[30%] py-5 px-5 bg-white relative">
+            <p
+              className="absolute opacity-0 top-1/6 right-6 text-3xl font-semibold"
+              onClick={() => setPanelOpen(false)}
+              ref={panelCloseRef}
+            >
+              <i className="ri-arrow-down-wide-line"></i>
+            </p>
+            <h3 className="font-semibold text-2xl text-gray-800">Find a trip</h3>
+            <form
+              className="mt-3"
+              onSubmit={submitHandler}
+              onClick={() => setPanelOpen(true)}
+            >
+              <div className="w-1 h-[60px] bg-black left-9 top-1/2 absolute"></div>
+              <input
+                type="text"
+                value={pick}
+                onChange={(e) => setPick(e.target.value)}
+                className="bg-[#eee] mt-2 px-6 py-3 text-base w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition"
+                placeholder="Enter Your Pick Up Location"
+              />
+              <input
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                className="bg-[#eeeeee] mt-2 px-6 py-3 text-base w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition"
+                placeholder="Enter Your Destination"
+              />
+            </form>
+          </div>
+          <div ref={panelRef} className="h-0 bg-white">
+            <LocationSearchPanel
+              setVehiclePanelOpen={setVehiclePanelOpen}
+              setPanelOpen={setPanelOpen}
+            />
+          </div>
+        </div>
+
+        {/* Bottom panels */}
         <div
-          className='h-[30%] py-5 px-5 bg-white relative'
+          ref={vehicleRef}
+          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8"
         >
-          <p
-            className=' absolute opacity-0 top-1/6 right-6 text-3xl font-semibold'
-            onClick={() => {
-              setPanelOpen(false)
-            }}
-            ref={panelCloseRef}
-          >
-            <i className="ri-arrow-down-wide-line"></i>
-          </p>
-          <h3 className="font-semibold text-2xl text-gray-800">Find a trip</h3>
-          <form
-            className="mt-3"
-            onSubmit={(e) => {
-              submitHandler(e)
-            }}
-            onClick={() => {
-              setPanelOpen(true)
-            }}
-          >
-            <div className='w-1 h-[60px] bg-black left-9 top-1/2 absolute'></div>
-            <input
-              type="text"
-              value={pick}
-              onChange={(e) => {
-                setPick(e.target.value)
-              }}
-              className="bg-[#eee] mt-2 px-6 py-3 text-base w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition"
-              placeholder="Enter Your Pick Up Location"
-            />
-            <input
-              type="text"
-              value={destination}
-              onChange={(e) => {
-                setDestination(e.target.value)
-              }}
-              className="bg-[#eeeeee] mt-2 px-6 py-3 text-base w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 transition"
-              placeholder="Enter Your Destination"
-            />
-          </form>
+          <VehiclePanel
+            setPanelOpen={setPanelOpen}
+            setConfirmRidePanelOpen={setConfirmRidePanelOpen}
+            setVehiclePanelOpen={setVehiclePanelOpen}
+          />
         </div>
-        <div ref={panelRef} className='h-0 bg-white'>
-          <LocationSearchPanel setVehiclePanelOpen={setVehiclePanelOpen} setPanelOpen={setPanelOpen} />
+        <div
+          ref={confirmRideRef}
+          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8"
+        >
+          <ConfirmRide
+            setVehiclePanelOpen={setVehiclePanelOpen}
+            setConfirmRidePanelOpen={setConfirmRidePanelOpen}
+            setVehicleFound={setVehicleFound}
+          />
         </div>
-      </div>
-      <div ref={vehicleRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
-        <VehiclePanel setPanelOpen={setPanelOpen} setConfirmRidePanelOpen={setConfirmRidePanelOpen} setVehiclePanelOpen={setVehiclePanelOpen} />
-      </div>
-      <div ref={confirmRideRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
-        <ConfirmRide setVehiclePanelOpen={setVehiclePanelOpen} setConfirmRidePanelOpen={setConfirmRidePanelOpen} setVehicleFound={setVehicleFound} />
-      </div>
-      <div ref={vehicleFoundRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
-        <LookingDriver setConfirmRidePanelOpen={setConfirmRidePanelOpen} setVehicleFound={setVehicleFound} setWaitingForDriver={setWaitingForDriver} />
-      </div>
-      <div ref={driverFoundRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
-        <WaitingDriver setVehicleFound={setVehicleFound} setWaitingForDriver={setWaitingForDriver} />
+        <div
+          ref={vehicleFoundRef}
+          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8"
+        >
+          <LookingDriver
+            setConfirmRidePanelOpen={setConfirmRidePanelOpen}
+            setVehicleFound={setVehicleFound}
+            setWaitingForDriver={setWaitingForDriver}
+          />
+        </div>
+        <div
+          ref={driverFoundRef}
+          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8"
+        >
+          <WaitingDriver
+            setVehicleFound={setVehicleFound}
+            setWaitingForDriver={setWaitingForDriver}
+          />
+        </div>
       </div>
     </div>
+
   )
 }
 

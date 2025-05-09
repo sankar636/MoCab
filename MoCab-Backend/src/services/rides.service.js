@@ -23,7 +23,7 @@ const getFare = async (pickup, destination) => {
     const perKmRate = {
         auto: 10,
         car: 15,
-        bike: 20
+        bike: 8
     }
     const perMinuteRate = {
         auto: 2,
@@ -70,13 +70,14 @@ const createRide = async(
 
     const fare = await getFare(pickup, destination);
     console.log("Fare",fare);
-    console.log("OTP is",generateOTP());
+    const OTP = generateOTP()
+    console.log("OTP is",OTP);
         
     const ride = await Rides.create({
         userId,
         pickupLocation: pickup,
         destinationLocation: destination,
-        otp: generateOTP(),
+        otp: OTP,
         fare: fare[vehicleType]
     })
 

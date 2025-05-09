@@ -15,6 +15,7 @@ const UserProtectWrapper = ({
         console.log("Token At User Profile",token);        
         if (!token) {
             navigate('/UserLogin')
+            return;
         }
         
         axios.get(`${import.meta.env.VITE_BASE_URL}/user/profile`, {
@@ -28,7 +29,7 @@ const UserProtectWrapper = ({
                 setIsLoading(false)
             }
         }).catch(err => {
-                console.log(err)
+                console.log("Error is at Protected Wrapper".err)
                 localStorage.removeItem('token')
                 navigate('/UserLogin')
             })
