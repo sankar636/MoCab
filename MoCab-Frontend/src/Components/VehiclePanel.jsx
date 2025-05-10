@@ -32,7 +32,7 @@ const VehiclePanel = (props) => {
             seats: 1,
         },
     ];
-
+    
     return (
         <div>
             <h1 className='pb-3 font-semibold text-2xl'>Choose A Vehicle</h1>
@@ -49,6 +49,7 @@ const VehiclePanel = (props) => {
                     onClick={() => {
                         props.setConfirmRidePanelOpen(true)
                         props.setVehiclePanelOpen(false)
+                        props.setVehicleType(vehicle.name.toLowerCase())
                     }}
                 >
                     <img className="h-[60px] w-[25%]" src={vehicle.image} alt={vehicle.name} />

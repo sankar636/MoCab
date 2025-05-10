@@ -3,6 +3,7 @@ import Car from '../assets/Car.png'
 import DriverProfile from '../assets/DriverProfile.jpg'
 const WaitingDriver = (props) => {
     // console.log("Driver Found Props: ", props);
+    const Amount = props.fare[props.vehicleType]
 
     return (
         <div>
@@ -49,7 +50,7 @@ const WaitingDriver = (props) => {
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-money-rupee-circle-line"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>&#8377;190.5</h1>
+                    <h1 className='font-semibold'>&#8377;{Amount}</h1>
                     <h3>Cash Cash</h3>
                 </div>
             </div>

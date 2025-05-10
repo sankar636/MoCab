@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { data, Link } from 'react-router-dom'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import 'remixicon/fonts/remixicon.css'
@@ -26,6 +26,7 @@ const Home = () => {
   const [activeField, setActiveField] = useState(null)
   const [vehicleType, setVehicleType] = useState(null)
   const [fare, setFare] = useState({})
+  const [ride, setRide] = useState(null)
 
 
   const panelRef = useRef(null)
@@ -40,7 +41,7 @@ const Home = () => {
 
   const submitHandler = (e) => {
     e.preventDefault()
-  
+
   }
 
   const handelPickUpChange = async (e) => {
@@ -50,7 +51,7 @@ const Home = () => {
     try {
       const response = await axios.get(`${baseURL}/map/getsuggession`,
         {
-          params: {input: e.target.value },
+          params: { input: e.target.value },
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -61,8 +62,8 @@ const Home = () => {
       setPickUpSuggession(response.data.data)
 
     } catch (error) {
-      console.log("NO Pickup Location",error);
-      
+      console.log("NO Pickup Location", error);
+
     }
   }
 
@@ -74,7 +75,7 @@ const Home = () => {
     try {
       const response = await axios.get(`${baseURL}/map/getsuggession`,
         {
-          params: {input: e.target.value },
+          params: { input: e.target.value },
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -85,8 +86,8 @@ const Home = () => {
       setDestinationSuggession(response.data.data)
 
     } catch (error) {
-      console.log("NO Pickup Location",error);
-      
+      console.log("NO Pickup Location", error);
+
     }
   }
 
@@ -104,8 +105,32 @@ const Home = () => {
     )
     // console.log(response.data.data.fare); 
     const fareFromData = response.data.data.fare
-    setFare(fareFromData)   
+    setFare(fareFromData)
   }
+
+  const initiateRide = async () => {
+  const token = localStorage.getItem('token');
+  // try {
+    const response = await axios.post(
+      `${baseURL}/ride/create`,
+      {
+        pickup: pick,
+        destination: destination,
+        vehicleType: vehicleType
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+    console.log("Initiate Ride", response.data.data);
+  // } catch (error) {
+  //   console.log("Error in Initiating Ride", error);
+  // }
+  const rideData = response.data.data
+  setRide(rideData)
+};
 
   useGSAP(function () {
     if (panelOpen) {
@@ -178,12 +203,12 @@ const Home = () => {
 
   return (
     <div className="relative h-screen overflow-hidden"
-    style={{ backgroundImage: "url('https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif')" }}
+      style={{ backgroundImage: "url('https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif')" }}
     >
 
       {/* ✅ HEADER moved to top with high z-index */}
-      <div className="fixed top-0 left-0 w-full px-3 flex items-center justify-between h-[60px] z-[9999]" 
-      
+      <div className="fixed top-0 left-0 w-full px-3 flex items-center justify-between h-[60px] z-[9999]"
+
       >
         <img src={Logo} alt="MoCaB" className="w-24" />
         <Link
@@ -217,8 +242,8 @@ const Home = () => {
             <h3 className="font-semibold text-2xl text-gray-800">Find a trip</h3>
             <form
               className="mt-3"
-              onSubmit={(e) => {submitHandler(e)}}
-              
+              onSubmit={(e) => { submitHandler(e) }}
+
             >
               <div className="w-1 h-[60px] bg-black left-9 top-1/2 absolute"></div>
               <input
@@ -248,7 +273,7 @@ const Home = () => {
               />
             </form>
             <button className='w-full text-white text-2xl bg-blue-600 mt-4 py-2 rounded'
-            onClick={() => findTrip()}
+              onClick={() => findTrip()}
             >Find A Trip</button>
           </div>
           <div ref={panelRef} className="h-0 bg-white">
@@ -272,7 +297,7 @@ const Home = () => {
             setPanelOpen={setPanelOpen}
             setConfirmRidePanelOpen={setConfirmRidePanelOpen}
             setVehiclePanelOpen={setVehiclePanelOpen}
-            setVehicleType = {setVehicleType}
+            setVehicleType={setVehicleType}
             fare={fare}
           />
         </div>
@@ -284,6 +309,13 @@ const Home = () => {
             setVehiclePanelOpen={setVehiclePanelOpen}
             setConfirmRidePanelOpen={setConfirmRidePanelOpen}
             setVehicleFound={setVehicleFound}
+
+            initiateRide={initiateRide}
+
+            vehicleType={vehicleType}
+            fare={fare}
+            pick={pick}
+            destination={destination}
           />
         </div>
         <div
@@ -294,6 +326,14 @@ const Home = () => {
             setConfirmRidePanelOpen={setConfirmRidePanelOpen}
             setVehicleFound={setVehicleFound}
             setWaitingForDriver={setWaitingForDriver}
+
+            // initiateRide={initiateRide}
+            ride={ride}
+
+            vehicleType={vehicleType}
+            fare={fare}
+            pick={pick}
+            destination={destination}
           />
         </div>
         <div
@@ -303,6 +343,7 @@ const Home = () => {
           <WaitingDriver
             setVehicleFound={setVehicleFound}
             setWaitingForDriver={setWaitingForDriver}
+            fare={fare}
           />
         </div>
       </div>

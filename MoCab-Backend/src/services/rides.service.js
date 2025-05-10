@@ -52,11 +52,11 @@ const getFare = async (pickup, destination) => {
 }
 
 const generateOTP = () => {
-    const otp = crypto.randomInt(100000,999999).toString() // it give random 6 digit otp number
+    const otp = crypto.randomInt(100000, 999999).toString() // it give random 6 digit otp number
     return otp
 }
 
-const createRide = async(
+const createRide = async (
     {
         userId,
         pickup,
@@ -64,15 +64,15 @@ const createRide = async(
         vehicleType,
     }
 ) => {
-    if(!userId || !pickup || !destination || !vehicleType){
+    if (!userId || !pickup || !destination || !vehicleType) {
         throw new ApiError(400, "All Fields are required")
     }
 
     const fare = await getFare(pickup, destination);
-    console.log("Fare",fare);
+    console.log("Fare", fare);
     const OTP = generateOTP()
-    console.log("OTP is",OTP);
-        
+    console.log("OTP is", OTP);
+
     const ride = await Rides.create({
         userId,
         pickupLocation: pickup,
@@ -84,17 +84,17 @@ const createRide = async(
     return ride
 }
 
-const confirmRide = async({rideId, driver}) => {
+const confirmRide = async ({ rideId, driver }) => {
     // if(!rideId || !driver){
 
     // }
 }
 
-const startRide = async({ rideId, otp, driver}) => {
+const startRide = async ({ rideId, otp, driver }) => {
 
 }
 
-const endRide = async({rideId, driver}) => {
+const endRide = async ({ rideId, driver }) => {
 
 }
 export {
