@@ -28,11 +28,11 @@ router.get(
   getAutoCompleteSuggession
 )
 
-router.get(
-  '/getsuggession',
-  verifyJWT,
-  getAutoCompleteSuggession
-)
+// router.get(
+//   '/getsuggession',
+//   verifyJWT,
+//   getAutoCompleteSuggession
+// )
 
 export default router;
 

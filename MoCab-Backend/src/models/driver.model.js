@@ -63,11 +63,11 @@ const driverSchema = new Schema({
         }
     },
     location: {
-        lat:{
+        ltd:{
             type: Number,
             // required: true
         },
-        log:{
+        lng:{
             type: Number,
             // required: true
         }

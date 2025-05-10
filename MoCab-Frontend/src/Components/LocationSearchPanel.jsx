@@ -19,8 +19,8 @@ const LocationSearchPanel = (props) => {
         key={idx} 
         className='flex justify-start items-center hover:bg-gray-50 p-2 rounded cursor-pointer transition duration-300'
         onClick={() => {
-          props.setVehiclePanelOpen(true)
-          props.setPanelOpen(false)
+          // props.setVehiclePanelOpen(true)
+          // props.setPanelOpen(false)
          
           handelSuggessionClick(element)
          

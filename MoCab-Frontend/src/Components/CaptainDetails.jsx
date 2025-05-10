@@ -1,14 +1,20 @@
 import React from 'react'
+import { useContext } from 'react'
 import DriverProfile from '../assets/DriverProfile.jpg'
 
+import { CaptainDataContext } from '../Context/CaptainContext.jsx'
+
+
+
 const CaptainDetails = () => {
+  const { driver } = useContext(CaptainDataContext)
   return (
     <div>
       <div className="flex items-center justify-between px-3 py-4 border-b-2">
         <div>
           <img src={DriverProfile} alt="Driver" className="w-16 h-16 rounded-full object-cover" />
         </div>
-        <h1 className="text-lg font-semibold">SankarShan</h1>
+        <h1 className="text-lg font-semibold capitalize">{driver.fullname.firstname + " " + driver.fullname.lastname}</h1>
         <div className="text-right">
           <h4 className="text-xl font-bold text-green-600">&#8377;195.5</h4>
           <p className="text-sm text-gray-500">Earned</p>
@@ -36,3 +42,6 @@ const CaptainDetails = () => {
 }
 
 export default CaptainDetails
+
+
+// capitalize css proprty in the name part write the name in First letter capital and other small of each word

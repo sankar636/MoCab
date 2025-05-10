@@ -10,6 +10,10 @@ import ConfirmRide from '../Components/ConfirmRide.jsx'
 import LookingDriver from '../Components/LookingDriver.jsx'
 import WaitingDriver from '../Components/WaitingDriver.jsx'
 import axios from 'axios'
+
+import { io } from 'socket.io-client'
+
+
 // import LogoutButton from '../Components/LogoutButton.jsx'
 
 const Home = () => {

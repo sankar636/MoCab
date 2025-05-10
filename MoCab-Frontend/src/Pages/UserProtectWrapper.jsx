@@ -12,7 +12,7 @@ const UserProtectWrapper = ({
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        console.log("Token At User Profile",token);        
+        // console.log("Token At User Profile",token);        
         if (!token) {
             navigate('/UserLogin')
             return;
@@ -24,7 +24,7 @@ const UserProtectWrapper = ({
             }
         }).then(response => {
             if (response.status === 200) {
-                console.log("Data: ",response.data);                
+                // console.log("Data: ",response.data);                
                 setUser(response.data)
                 setIsLoading(false)
             }
