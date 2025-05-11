@@ -11,8 +11,14 @@ const getFare = async (pickup, destination) => {
     const distanceTime = await getDistanceTime(pickup, destination)
 
     // Parse distance and duration from text
-    const distanceInKm = parseFloat(distanceTime.distance.replace(" km", ""));
+    // const distanceInKm = parseFloat(distanceTime.distance.replace(" km", ""));
+    const distanceStr = distanceTime.distance;
+    const kmMatch = distanceStr.match(/[\d,\.]+/); // extract the number with comma or dot
+    const distanceInKm = kmMatch ? parseFloat(kmMatch[0].replace(",", "")) : 0;
+    console.log("Distance", distanceInKm);
+
     const durationInMins = parseFloat(distanceTime.duration.replace(" mins", ""));
+    console.log("Duration", durationInMins);
 
 
     const baseFare = {

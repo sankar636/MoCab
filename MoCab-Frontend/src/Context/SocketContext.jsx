@@ -1,29 +1,44 @@
-import React , { useContext, useEffect } from "react";
+import React, { createContext, useEffect } from 'react';
+import { io } from 'socket.io-client';
 
-export const SocketContext = useContext()
+export const SocketContext = createContext();
 
-const baseURL = import.meta.env.VITE_BASE_URL;
+const Socket = io(import.meta.env.VITE_BASE_URL, {
+    withCredentials: true, // Ensure credentials are sent
+    transports: ['websocket', 'polling'], // Explicitly specify transports
+    path: '/socket.io', // Ensure the path matches the backend's Socket.IO configuration
+});
 
-const socket = io(`${baseURL}`)
-
-const SocketContext = ({children}) => {
-
+const SocketProvider = ({ children }) => {
     useEffect(() => {
-        socket.on('connection', () => {
-            console.log("Connected To Server");
-        })
+        // Basic connection logic
+        Socket.on('connect', () => {
+            console.log('Connected to server:', Socket.id); // Log when connected
+            Socket.emit('join', { userType: 'user', userId: 'testUserId' }); // Emit a test join event
+        });
 
-        socket.on('disconnect', () => {
-            console.log("Disconnect From Server");            
-        })
+        Socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
 
-    },[])
+        Socket.on('error', (error) => {
+            console.error('Socket error:', error); // Log any errors
+        });
+    }, []);
 
     return (
-        <SocketContext.Provider value={ {socket} }>
+        <SocketContext.Provider value={{ Socket }}>
             {children}
         </SocketContext.Provider>
-    )
-}
+    );
+};
 
-export default SocketProvider
+export default SocketProvider;
+
+
+// /*
+// Listening to 'connection' on the client is incorrect:
+// socket.on('connection', ...)  --> socket.on('connection', ...)
+
+
+// */

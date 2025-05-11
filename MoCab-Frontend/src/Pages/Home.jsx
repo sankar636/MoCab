@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { data, Link } from 'react-router-dom'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -11,8 +11,11 @@ import LookingDriver from '../Components/LookingDriver.jsx'
 import WaitingDriver from '../Components/WaitingDriver.jsx'
 import axios from 'axios'
 
-import { io } from 'socket.io-client'
+import { UserDataContext } from '../Context/UserContext.jsx'
+import { SocketContext } from '../Context/SocketContext.jsx'
 
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 // import LogoutButton from '../Components/LogoutButton.jsx'
 
@@ -42,6 +45,13 @@ const Home = () => {
 
   const token = localStorage.getItem('token');
   const baseURL = import.meta.env.VITE_BASE_URL;
+
+  const { user } = useContext(UserDataContext)
+  const { Socket } = useContext(SocketContext)
+
+  // useEffect(() => {
+
+  // },[])
 
   const submitHandler = (e) => {
     e.preventDefault()
