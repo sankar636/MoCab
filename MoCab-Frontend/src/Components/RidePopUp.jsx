@@ -1,8 +1,10 @@
 import React from 'react'
 import DriverProfile from '../assets/DriverProfile.jpg'
 
+
 const RidePopUp = (props) => {
     // console.log("RidePopUp", props);
+    
     return (
         <div>
             <h1
@@ -50,7 +52,7 @@ const RidePopUp = (props) => {
             onClick={() => {
                 props.setRidePopUpPanel(false)
                 props.setConfirmRidePopUpPanel(true)
-
+                
             }}
             className='w-full bg-green-400 py-2 font-semibold rounded-xl mt-2'
             >Accept</button>

@@ -2,6 +2,8 @@ import ApiError from "../utils/ApiError.js"
 import { getDistanceTime } from "./maps.service.js"
 import crypto from 'crypto'
 import Rides from '../models/rides.model.js'
+import Driver from "../models/driver.model.js";
+import { sendMessageToSocketId } from "../socket.js";
 
 const getFare = async (pickup, destination) => {
     if (!pickup || !destination) {
@@ -62,21 +64,14 @@ const generateOTP = () => {
     return otp
 }
 
-const createRide = async (
-    {
-        userId,
-        pickup,
-        destination,
-        vehicleType,
-    }
-) => {
+const createRide = async ({ userId, pickup, destination, vehicleType }) => {
     if (!userId || !pickup || !destination || !vehicleType) {
-        throw new ApiError(400, "All Fields are required")
+        throw new ApiError(400, "All Fields are required");
     }
 
     const fare = await getFare(pickup, destination);
     console.log("Fare", fare);
-    const OTP = generateOTP()
+    const OTP = generateOTP();
     console.log("OTP is", OTP);
 
     const ride = await Rides.create({
@@ -85,19 +80,39 @@ const createRide = async (
         destinationLocation: destination,
         otp: OTP,
         fare: fare[vehicleType]
-    })
+    });
 
-    return ride
-}
+    return ride;
+};
 
 const confirmRide = async ({ rideId, driver }) => {
-    // if(!rideId || !driver){
+    if (!rideId) {
+        throw new ApiError(400, "Ride ID is required");
+    }
 
-    // }
-}
+    // Update the status and driver ID in the ride
+    await Rides.findByIdAndUpdate(
+        { _id: rideId },
+        {
+            status: "accepted",
+            driverId: driver._id
+        }
+    );
+
+    const ride = await Rides.findOne({ _id: rideId })
+        .populate("user")
+        .populate("driver")
+        .select("+otp");
+
+    if (!ride) {
+        throw new ApiError(400, "Ride not confirmed or found");
+    }
+
+    return ride;
+};
 
 const startRide = async ({ rideId, otp, driver }) => {
-
+    
 }
 
 const endRide = async ({ rideId, driver }) => {

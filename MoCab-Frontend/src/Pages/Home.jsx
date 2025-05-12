@@ -46,22 +46,20 @@ const Home = () => {
   const token = localStorage.getItem('token');
   const baseURL = import.meta.env.VITE_BASE_URL;
 
+  const navigate = useNavigate()
+
   const { user } = useContext(UserDataContext)
   const { Socket } = useContext(SocketContext)
+  // console.log(user);
 
-  // useEffect(() => {
-
-  // },[])
-
-  const submitHandler = (e) => {
-    e.preventDefault()
-
-  }
+  useEffect(() => {
+if (Socket) {
+    Socket.emit('join', { userType: 'user', userId: user._id });
+    }
+  }, [Socket, user]);
 
   const handelPickUpChange = async (e) => {
     setPick(e.target.value)
-
-
     try {
       const response = await axios.get(`${baseURL}/map/getsuggession`,
         {
@@ -123,8 +121,8 @@ const Home = () => {
   }
 
   const initiateRide = async () => {
-  const token = localStorage.getItem('token');
-  // try {
+    // const token = localStorage.getItem('token');
+    try {
     const response = await axios.post(
       `${baseURL}/ride/create`,
       {
@@ -138,13 +136,13 @@ const Home = () => {
         }
       }
     );
-    console.log("Initiate Ride", response.data.data);
-  // } catch (error) {
-  //   console.log("Error in Initiating Ride", error);
-  // }
-  const rideData = response.data.data
-  setRide(rideData)
-};
+    // console.log("Initiate Ride", response.data);
+    // const rideData = response.data.data
+    // setRide(rideData)
+    } catch (error) {
+      console.log("Error in Initiating Ride", error);
+    }
+  };
 
   useGSAP(function () {
     if (panelOpen) {
@@ -341,8 +339,8 @@ const Home = () => {
             setVehicleFound={setVehicleFound}
             setWaitingForDriver={setWaitingForDriver}
 
-            // initiateRide={initiateRide}
-            ride={ride}
+            initiateRide={initiateRide}
+            // ride={ride}
 
             vehicleType={vehicleType}
             fare={fare}

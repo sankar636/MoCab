@@ -28,13 +28,14 @@ const ConfirmRide = (props) => {
     const Amount = props.fare[props.vehicleType]
     
     // console.log(props.initiateRide());    
-    
+    // props.setVehicleFound(false)
     return (
         <div>
             <h1
                 className='absolute top-1 right-1/2 text-2xl font-semibold'
                 onClick={() => {
                     props.setConfirmRidePanelOpen(false)
+                    
                 }}
             ><i className="ri-arrow-down-wide-line"></i>
             </h1>
@@ -66,10 +67,10 @@ const ConfirmRide = (props) => {
                 </div>
             </div>
             <button 
-            onClick={() => {
+            onClick={async() => {
                 props.setVehicleFound(true)
                 props.setConfirmRidePanelOpen(false)
-                props.initiateRide()
+                await props.initiateRide()
             }}
             className='w-full bg-green-400 py-2 font-semibold rounded-full'
             >Conform</button>

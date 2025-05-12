@@ -1,61 +1,114 @@
 import asyncHandler from "../utils/AsyncHandler.js";
-import { createRide, getFare } from "../services/rides.service.js";
+import { createRide, getFare, confirmRide } from "../services/rides.service.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { validationResult } from "express-validator";
+import { sendMessageToSocketId } from "../socket.js";
+import { driverInTheRadious, getAddressCoordinate } from "../services/maps.service.js";
+import Rides from "../models/rides.model.js";
 
 const createRideController = asyncHandler(async (req, res, next) => {
-    console.log(req.body);
-    
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) { 
-        return res.status(400).json(new ApiError(400, "Validation   errors", errors.array()));
+    console.log("DATA comes fron body", req.body);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
     }
 
-    const { pickup, destination, vehicleType } = req.body
+    const { pickup, destination, vehicleType } = req.body;
 
     const ride = await createRide({
-        // userId: userId, // we can use this whenever you pass userId in body. as we verify the user by verify JWT. So .
-        userId:req.user._id,
-        pickup, 
+        userId: req.user._id,
+        pickup,
         destination,
         vehicleType
-    })
-    console.log("Ride",ride);
-    
-    if(!ride){
-        throw new ApiError(400, "Error While Creating Ride At controller")
+    });
+    console.log("Ride", ride);
+    // res.status(200).json(ride)
+    if (!ride) {
+        throw new ApiError(400, "Error While Creating Ride At controller");
     }
 
+
+    // get the pickup coordinate of the user
+    const pickUpCoordinate = await getAddressCoordinate(pickup)
+    if (!pickUpCoordinate) {
+        throw new ApiError(400, "No pickup address found of user")
+    }
+    console.log("Pickup coordinates:", pickUpCoordinate);
+
+    const driverWithInRadius = await driverInTheRadious(pickUpCoordinate.lng, pickUpCoordinate.lat, 10); // latitude, longitude of the user and last one is the radius around the user
+    console.log("Drivers within radius:", driverWithInRadius);
+
+    if (!driverWithInRadius || driverWithInRadius.length === 0) {
+        throw new ApiError(400, "No driver within your nearby area");
+    }
+
+    // add data of user in the ride model
+    const rideWithUser = await Rides.findOne({ _id: ride._id })
+    if (!rideWithUser) {
+        throw new ApiError(400, "User not there in the ride ")
+    }
+    //send message to the driver about the user and location, and fare etc
+    console.log(rideWithUser);
+
+    driverWithInRadius.map(driver => {
+        sendMessageToSocketId(driver.socketId, {
+            event: 'new-ride',
+            data: rideWithUser
+        })
+    })
+
+
     return res.status(200).json(
-        new ApiResponse(200,"Ride Created Successfully",{ride})
-    )
+        new ApiResponse(200, "Ride Created Successfully", { ride })
+    );
+});
 
-})
-
-const getFareController = asyncHandler(async(req, res, next) => {
+const getFareController = asyncHandler(async (req, res, next) => {
     console.log(req.query);
-    
+
     const errors = validationResult(req)
-    if (!errors.isEmpty()) { 
+    if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation   errors", errors.array()));
     }
 
-    const {pickup, destination} = req.query
+    const { pickup, destination } = req.query
 
-    if(!pickup || !destination){
+    if (!pickup || !destination) {
         throw new ApiError(400, "Pickup and destination fields are required")
     }
 
     const fare = await getFare(pickup, destination)
 
     return res.status(200).json(
-        new ApiResponse(200,"Fare",{fare})
+        new ApiResponse(200, "Fare", { fare })
     )
 })
+
+const confirmRideController = asyncHandler(async (req, res, next) => {
+    console.log(req.body);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
+    }
+
+    const { rideId } = req.body;
+    const driver = req.driver; // Assuming `verifyDriverJWT` middleware adds driver info to req
+
+    const ride = await confirmRide({ rideId, driver });
+
+    if (!ride) {
+        throw new ApiError(400, "Error While Confirming Ride At controller");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, "Ride Confirmed Successfully", { ride })
+    );
+});
 
 
 export {
     createRideController,
-    getFareController
-}
+    getFareController,
+    confirmRideController
+};

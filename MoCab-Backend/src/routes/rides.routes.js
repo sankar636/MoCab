@@ -3,8 +3,8 @@ import { body, query } from "express-validator";
 
 const router = Router()
 
-import { createRideController, getFareController } from "../controllers/rides.controller.js";
-import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { confirmRideController, createRideController, getFareController } from "../controllers/rides.controller.js";
+import { verifyDriverJWT, verifyJWT } from "../middlewares/auth.middleware.js";
 
 router.route('/create').post(
     [
@@ -26,7 +26,13 @@ router.route('/getfare').get(
     getFareController
 )
 
-// router.route('/confirm').post()
+router.route('/confirm').post(
+    [
+        verifyDriverJWT,
+        body('rideId').isMongoId().withMessage("Invalid Ride Id")
+    ],
+    confirmRideController
+);
 
 // router.route('/start').get()
 

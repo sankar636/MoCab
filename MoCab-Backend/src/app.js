@@ -9,6 +9,24 @@ app.use(cors({
     credentials: true // Allow credentials (cookies, headers)
 }))
 
+// const allowedOrigins = [
+//     'http://localhost:5173',
+//     'https://xvr7b560-5173.inc1.devtunnels.ms/', // for Codespaces
+//     'http://localhost:5000', // if using forwarded port in VS Code
+//     // Add more if needed
+//   ];
+  
+//   app.use(cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.preview.app.github.dev')) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error('Not allowed by CORS'));
+//       }
+//     },
+//     credentials: true // if you're using cookies or authorization headers
+//   }));
+
 app.use(express.json({
     limit:"50kb"
 }))
@@ -22,9 +40,9 @@ app.use(express.static("public"))
 
 app.use(cookieParser())
 
-app.get('/', (req, res) => {
-        res.send('<h1>Hello world</h1>');
-    });
+// app.get('/', (req, res) => {
+//         res.send('<h1>Hello world</h1>');
+//     });
 
 import userRouter from './routes/user.routes.js'
 // routes declaration user

@@ -21,9 +21,9 @@ const SocketProvider = ({ children }) => {
             console.log('Disconnected from server');
         });
 
-        Socket.on('error', (error) => {
-            console.error('Socket error:', error); // Log any errors
-        });
+        // Socket.on('error', (error) => {
+        //     console.error('Socket error:', error); // Log any errors
+        // });
     }, []);
 
     return (

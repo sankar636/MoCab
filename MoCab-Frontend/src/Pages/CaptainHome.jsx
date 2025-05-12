@@ -1,12 +1,15 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useContext, useEffect } from 'react'
 import Logo from '../assets/Logo1.png'
 import { Link } from 'react-router-dom'
 import 'remixicon/fonts/remixicon.css'
-import CaptainDetails from '../Components/CaptainDetails'
-import RidePopUp from '../Components/RidePopUp'
+import CaptainDetails from '../Components/CaptainDetails.jsx'
+import RidePopUp from '../Components/RidePopUp.jsx'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
-import ConfirmCaptainRide from '../Components/ConfirmCaptainRide'
+import ConfirmCaptainRide from '../Components/ConfirmCaptainRide.jsx'
+
+import { CaptainDataContext } from '../Context/CaptainContext.jsx'
+import { SocketContext } from '../Context/SocketContext.jsx'
 
 const CaptainHome = () => {
 
@@ -15,6 +18,44 @@ const CaptainHome = () => {
 
   const ridePopUpRef = useRef(null)
   const confirmRidePopUpRef = useRef(null)
+
+  const { driver } = useContext(CaptainDataContext)
+  const { Socket } = useContext(SocketContext)
+
+  useEffect(() => {
+    if (!driver?._id) return;
+    Socket.emit('join', { userType: 'driver', userId: driver._id })
+
+    const updateLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const { latitude, longitude } = position.coords;
+          console.log({userId: driver._id,
+            location: {
+            lat: latitude,
+            lng: longitude,
+          }});
+
+          Socket.emit('update-location-driver', {
+            userId: driver._id,
+            location: {
+              lat: latitude,
+              lng: longitude,
+            }
+          });
+        });
+      }
+    }
+
+    const sendLocationInterval = setInterval(updateLocation, 100000);
+    updateLocation()
+    // return () => clearInterval(sendLocationInterval);
+  }, [])
+
+  Socket.on('new-ride', (data) => {
+    console.log("Ride Data",data);   
+    // setConfirmRidePopUpPanel(true)
+  })
 
   useGSAP(function () {
     if (ridePopUpPanel) {
@@ -58,10 +99,10 @@ const CaptainHome = () => {
           <CaptainDetails />
         </div>
         <div ref={ridePopUpRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
-          <RidePopUp setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}/>
+          <RidePopUp setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} />
         </div>
         <div ref={confirmRidePopUpRef} className='bottom-0 w-full fixed translate-y-full h-full bg-gray-50 px-3 py-8'>
-          <ConfirmCaptainRide setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}/>
+          <ConfirmCaptainRide setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} />
         </div>
       </div>
     </div>

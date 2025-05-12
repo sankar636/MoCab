@@ -31,7 +31,7 @@ function initializeSocket(server) {
                     await Driver.findByIdAndUpdate(userId, { socketId: socket.id });
                 }
             } catch (error) {
-                console.error('Error in join handler:', error);
+                // console.error('Error in join handler:', error);
                 socket.emit('error', { message: 'Server error in join event' });
             }
         });
@@ -39,22 +39,32 @@ function initializeSocket(server) {
         socket.on('update-location-driver', async (data) => {
             try {
                 const { userId, location } = data;
-
-                if (!location || !location.ltd || !location.lng) {
+        
+                if (!location || typeof location.lat !== 'number' || typeof location.lng !== 'number') {
+                    console.error("Invalid location data received:", location);
                     return socket.emit('error', { message: 'Invalid Location Data' });
                 }
-
+        
+                console.log("Updating driver location:", { userId, location });
+        
                 await Driver.findByIdAndUpdate(userId, {
                     location: {
-                        ltd: location.ltd,
-                        lng: location.lng
+                        type: 'Point',
+                        coordinates: [location.lng, location.lat] // GeoJSON requires [longitude, latitude]
                     }
                 });
+        
+                console.log("Driver location updated successfully for userId:", userId);
+        
+                // Optionally confirm success
+                socket.emit('location-updated', { message: 'Location updated successfully' });
+        
             } catch (error) {
                 console.error('Error in update-location-driver handler:', error);
                 socket.emit('error', { message: 'Server error in location update' });
             }
         });
+        
 
         socket.on('disconnect', () => {
             console.log(`Client disconnected: ${socket.id}`); // Log when a client disconnects

@@ -5,6 +5,7 @@ Here we have to use 3 services to get
 */
 
 import axios from "axios";
+import Driver from "../models/driver.model.js";
 
 const apikey = process.env.GOOGLE_MAPS_API;
 
@@ -49,6 +50,8 @@ const getDistanceTime = async (origin, destination) => {
     return null;
 };
 
+
+ 
 const autoCompleteSuggession = async (input) => {
     const apiKey = process.env.GOOGLE_MAPS_API;
 
@@ -75,16 +78,32 @@ const autoCompleteSuggession = async (input) => {
 
 }
 
-const captainInTheRadious = async (lat, lng, radiou) => {
-    // find captain(driver) within 5 Km radius
-    
-}
+const driverInTheRadious = async (lng, lat, radius) => {
+    try {
+        console.log("Searching for drivers within radius:", { lng, lat, radius });
+
+        const drivers = await Driver.find({
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[lng, lat], radius / 6371] // Radius in radians (Earth's radius = 6371 km)
+                }
+            },
+            // isAvailable: true // Ensure only available drivers are returned
+        });
+
+        console.log("Drivers found:", drivers);
+        return drivers;
+    } catch (error) {
+        console.error("Error finding drivers in radius:", error);
+        throw new Error("Error finding drivers in radius");
+    }
+};
 
 export {
     getAddressCoordinate,
     getDistanceTime,
     autoCompleteSuggession,
-    captainInTheRadious
+    driverInTheRadious
 };
 
 

@@ -8,10 +8,10 @@ const driverSchema = new Schema({
         firstname: {
             type: String,
             required: true,
-            minlength: [3,'First name must be atleast three character']
+            minlength: [3, 'First name must be at least three characters']
         },
         lastname: {
-            type: String,
+            type: String
         }
     },
     email: {
@@ -20,62 +20,61 @@ const driverSchema = new Schema({
         unique: true,
         lowercase: true,
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/]
-        // this part is called the regex. The regex used is a general one for validating email format.
     },
     phoneNo: {
-        type: Number,
-        // required: true
-        // match: [/^[6-9]\d{9}$/, "Please enter a valid 10-digit phone number"]
+        type: Number
     },
     password: {
         type: String,
         required: true,
-        select: false // Hide password field when querying users
+        select: false
     },
-    socketId:{
+    socketId: {
         type: String
     },
     status: {
         type: String,
         enum: ["active", "inactive"],
-        default:"inactive"
+        default: "active"
     },
     vehicle: {
-        color:{
+        color: {
             type: String,
             required: true,
-            minlength: [3,'color must be atleast three character']
+            minlength: [3, 'Color must be at least three characters']
         },
-        plate:{
+        plate: {
             type: String,
             required: true,
-            minlength: [8,'First name must be atleast three character']
+            minlength: [8, 'Plate must be at least eight characters']
         },
-        vehicleType:{
+        vehicleType: {
             type: String,
             required: true,
-            enum: ["car","bike","auto"]
+            enum: ["car", "bike", "auto"]
         },
-        capacity:{
-            type:Number,
+        capacity: {
+            type: Number,
             required: true,
-            min: [1,"Capacity must be required"]
+            min: [1, "Capacity is required"]
         }
     },
     location: {
-        ltd:{
-            type: Number,
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point',
             // required: true
         },
-        lng:{
-            type: Number,
+        coordinates: {
+            type: [Number], // [longitude, latitude]
             // required: true
         }
     },
     profilePicture: {
         type: String
     }
-}, { timestamps: true })
+}, { timestamps: true });
 // Methods for Driver
 
 // Pre-save middleware: Auto-hash password before saving if modified
@@ -94,15 +93,18 @@ driverSchema.methods.isPasswordCorrect = async function (inputPassword) {
 }
 
 // Instance method: Generate JWT auth token 
-driverSchema.methods.generateAuthToken = async function(){
-    const token = jwt.sign({_id: this._id}, process.env.JWT_SECRET,{ expiresIn: '24h' })
+driverSchema.methods.generateAuthToken = async function () {
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, { expiresIn: '24h' })
     return token
 }
 
 // Static method: Manual password hashing (for special cases like manual updates)
-driverSchema.statics.hashPassword = async function(password){
+driverSchema.statics.hashPassword = async function (password) {
     return await bcrypt.hash(password, 10);
 }
+// 2dsphere index for geospatial queries
+driverSchema.index({ location: "2dsphere" });
 
-const Driver = mongoose.model("Driver",driverSchema);
+
+const Driver = mongoose.model("Driver", driverSchema);
 export default Driver;

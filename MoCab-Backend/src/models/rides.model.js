@@ -22,7 +22,7 @@ const ridesSchema = new Schema(
         },
         status: {
             type: String,
-            enum: ['pending', , 'accepted', 'in-processed', 'completed', 'cancelled'],
+            enum: ['pending', 'accepted', 'in-processed', 'completed', 'cancelled'],
             default: 'pending',
         },
         fare: {

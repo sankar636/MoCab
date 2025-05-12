@@ -20,7 +20,7 @@ const LookingDriver = (props) => {
 
     const Amount = props.fare[props.vehicleType]
     // console.log("OTP is",props.ride?.ride.otp); // OTP 
-    const OTP = props.ride?.ride.otp
+    // const OTP = props.ride?.ride.otp
     return (
         <div>
             <h1
@@ -65,10 +65,10 @@ const LookingDriver = (props) => {
                 </div>
                 <div className='flex flex-row justify-left gap-4 p-2'>
                     <h5 className='flex justify-center items-center'><i className="ri-money-rupee-circle-line"></i></h5>
-                    <div className='flex flex-col'>
+                    {/* <div className='flex flex-col'>
                         <h1 className='font-semibold'>{OTP}</h1>
                         <h3>OTP</h3>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
