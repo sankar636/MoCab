@@ -3,7 +3,7 @@ import DriverProfile from '../assets/DriverProfile.jpg'
 
 
 const RidePopUp = (props) => {
-    // console.log("RidePopUp", props);
+    console.log("RidePopUp", props);
     
     return (
         <div>
@@ -19,7 +19,7 @@ const RidePopUp = (props) => {
                 <div>
                     <img src={DriverProfile} alt="Driver" className="w-16 h-16 rounded-full object-cover" />
                 </div>
-                <h1 className="text-lg font-semibold">SankarShan</h1>
+                <h1 className="text-lg font-semibold">{props.ride?.userId.fullname.firstname}</h1>
                 <div className="text-right">
                     <h4 className="text-xl font-bold text-green-600">2.5 KM</h4>
                 </div>
@@ -27,32 +27,32 @@ const RidePopUp = (props) => {
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-map-pin-user-fill"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>Driver Location</h1>
-                    <h3>Bhubaneswar</h3>
+                    <h1 className='font-semibold'>User Location</h1>
+                    <h3>{props.ride?.pickupLocation}</h3>
                 </div>
             </div>
             <hr className="border-t-2 border-gray-300" />
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-map-pin-2-fill"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>User Location</h1>
-                    <h3>Cuttack</h3>
+                    <h1 className='font-semibold'>User Destination</h1>
+                    <h3>{props.ride?.destinationLocation}</h3>
                 </div>
             </div>
             <hr className="border-t-2 border-gray-300" />
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-money-rupee-circle-line"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>&#8377;190.5</h1>
+                    <h1 className='font-semibold'>&#8377;{props.ride?.fare}</h1>
                     <h3>Cash Cash</h3>
                 </div>
             </div>
             <hr className="border-t-2 border-gray-300" />
             <button 
-            onClick={() => {
+            onClick={async() => {
                 props.setRidePopUpPanel(false)
                 props.setConfirmRidePopUpPanel(true)
-                
+                await props.confirmRideByDriver(true)
             }}
             className='w-full bg-green-400 py-2 font-semibold rounded-xl mt-2'
             >Accept</button>

@@ -33,7 +33,7 @@ const Home = () => {
   const [activeField, setActiveField] = useState(null)
   const [vehicleType, setVehicleType] = useState(null)
   const [fare, setFare] = useState({})
-  const [ride, setRide] = useState(null)
+  const [rideConfirmByDriver, setRideConfirmByDriver] = useState(null)
 
 
   const panelRef = useRef(null)
@@ -136,13 +136,21 @@ if (Socket) {
         }
       }
     );
-    // console.log("Initiate Ride", response.data);
+    console.log("Initiate Ride", response.data);
     // const rideData = response.data.data
     // setRide(rideData)
     } catch (error) {
       console.log("Error in Initiating Ride", error);
     }
   };
+
+  // After confirmation of ride by driver the socket send message. Now here we have to get it 
+  Socket.on('confirm-ride', (data) => {
+    // console.log("Ride Data",data);   
+    console.log(data);
+    setRideConfirmByDriver(data)
+    setWaitingForDriver(true)    
+  })
 
   useGSAP(function () {
     if (panelOpen) {
@@ -356,6 +364,7 @@ if (Socket) {
             setVehicleFound={setVehicleFound}
             setWaitingForDriver={setWaitingForDriver}
             fare={fare}
+            rideConfirmByDriver={rideConfirmByDriver}
           />
         </div>
       </div>

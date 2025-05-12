@@ -63,13 +63,13 @@ const LookingDriver = (props) => {
                         <h3>Cash Cash</h3>
                     </div>
                 </div>
-                <div className='flex flex-row justify-left gap-4 p-2'>
+                {/* <div className='flex flex-row justify-left gap-4 p-2'>
                     <h5 className='flex justify-center items-center'><i className="ri-money-rupee-circle-line"></i></h5>
-                    {/* <div className='flex flex-col'>
+                    <div className='flex flex-col'>
                         <h1 className='font-semibold'>{OTP}</h1>
                         <h3>OTP</h3>
-                    </div> */}
-                </div>
+                    </div>
+                </div> */}
             </div>
         </div>
     )

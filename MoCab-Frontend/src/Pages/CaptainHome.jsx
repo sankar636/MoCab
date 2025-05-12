@@ -7,20 +7,26 @@ import RidePopUp from '../Components/RidePopUp.jsx'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import ConfirmCaptainRide from '../Components/ConfirmCaptainRide.jsx'
+import axios from 'axios'
 
 import { CaptainDataContext } from '../Context/CaptainContext.jsx'
 import { SocketContext } from '../Context/SocketContext.jsx'
 
 const CaptainHome = () => {
 
-  const [ridePopUpPanel, setRidePopUpPanel] = useState(true)
+  const [ridePopUpPanel, setRidePopUpPanel] = useState(false)
   const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = useState(false)
+  const [ride , setRide] = useState(null)
+  const [userDeatilsToDriver, setUserDetailsToDriver] = useState(null)
 
   const ridePopUpRef = useRef(null)
   const confirmRidePopUpRef = useRef(null)
 
   const { driver } = useContext(CaptainDataContext)
   const { Socket } = useContext(SocketContext)
+
+  const token = localStorage.getItem('token');
+  const baseURL = import.meta.env.VITE_BASE_URL;
 
   useEffect(() => {
     if (!driver?._id) return;
@@ -54,9 +60,28 @@ const CaptainHome = () => {
 
   Socket.on('new-ride', (data) => {
     console.log("Ride Data",data);   
-    // setConfirmRidePopUpPanel(true)
+    setRide(data)
+    setRidePopUpPanel(true)
   })
 
+  const confirmRideByDriver = async () => {
+    try {
+      const response = await axios.post(`${baseURL}/ride/confirm`,
+        {
+          rideId:ride._id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      setUserDetailsToDriver(response.data.data)
+      console.log("Confirm ride from Driver",response.data.data);      
+    } catch (error) {
+      console.log("Error While Confirm Ride By Driver",error);      
+    }
+  }
   useGSAP(function () {
     if (ridePopUpPanel) {
       gsap.to(ridePopUpRef.current, {
@@ -99,10 +124,13 @@ const CaptainHome = () => {
           <CaptainDetails />
         </div>
         <div ref={ridePopUpRef} className='bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8'>
-          <RidePopUp setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} />
+          <RidePopUp setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} 
+          ride={ride}
+          confirmRideByDriver={confirmRideByDriver}
+          />
         </div>
         <div ref={confirmRidePopUpRef} className='bottom-0 w-full fixed translate-y-full h-full bg-gray-50 px-3 py-8'>
-          <ConfirmCaptainRide setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel} />
+          <ConfirmCaptainRide setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}  userDeatilsToDriver={userDeatilsToDriver}/>
         </div>
       </div>
     </div>

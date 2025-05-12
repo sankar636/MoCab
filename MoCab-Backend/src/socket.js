@@ -18,10 +18,10 @@ function initializeSocket(server) {
     });
 
     io.on('connection', (socket) => {
-        console.log(`Client connected: ${socket.id}`); // Log when a client connects
+        // console.log(`Client connected: ${socket.id}`); // Log when a client connects
 
         socket.on('join', async (data) => {
-            console.log('Join event received:', data); // Log the join event
+            // console.log('Join event received:', data); // Log the join event
             try {
                 const { userId, userType } = data;
 

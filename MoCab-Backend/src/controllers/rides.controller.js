@@ -8,7 +8,7 @@ import { driverInTheRadious, getAddressCoordinate } from "../services/maps.servi
 import Rides from "../models/rides.model.js";
 
 const createRideController = asyncHandler(async (req, res, next) => {
-    console.log("DATA comes fron body", req.body);
+    // console.log("DATA comes fron body", req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
@@ -22,8 +22,9 @@ const createRideController = asyncHandler(async (req, res, next) => {
         destination,
         vehicleType
     });
-    console.log("Ride", ride);
-    // res.status(200).json(ride)
+    res.status(200).json(ride)
+    ride.otp = '' // Read the comment below to understand it 
+    // console.log("Ride", ride);
     if (!ride) {
         throw new ApiError(400, "Error While Creating Ride At controller");
     }
@@ -34,24 +35,25 @@ const createRideController = asyncHandler(async (req, res, next) => {
     if (!pickUpCoordinate) {
         throw new ApiError(400, "No pickup address found of user")
     }
-    console.log("Pickup coordinates:", pickUpCoordinate);
+    // console.log("Pickup coordinates:", pickUpCoordinate);
 
     const driverWithInRadius = await driverInTheRadious(pickUpCoordinate.lng, pickUpCoordinate.lat, 10); // latitude, longitude of the user and last one is the radius around the user
-    console.log("Drivers within radius:", driverWithInRadius);
+    // console.log("Drivers within radius:", driverWithInRadius);
 
     if (!driverWithInRadius || driverWithInRadius.length === 0) {
         throw new ApiError(400, "No driver within your nearby area");
     }
 
     // add data of user in the ride model
-    const rideWithUser = await Rides.findOne({ _id: ride._id })
+    const rideWithUser = await Rides.findOne({ _id: ride._id }).populate('userId')
     if (!rideWithUser) {
         throw new ApiError(400, "User not there in the ride ")
     }
     //send message to the driver about the user and location, and fare etc
-    console.log(rideWithUser);
+    // console.log(rideWithUser);
 
     driverWithInRadius.map(driver => {
+        // console.log(driver, ride);        
         sendMessageToSocketId(driver.socketId, {
             event: 'new-ride',
             data: rideWithUser
@@ -59,13 +61,13 @@ const createRideController = asyncHandler(async (req, res, next) => {
     })
 
 
-    return res.status(200).json(
-        new ApiResponse(200, "Ride Created Successfully", { ride })
-    );
+    // return res.status(200).json(
+    //     new ApiResponse(200, "Ride Created Successfully", { ride })
+    // );
 });
 
 const getFareController = asyncHandler(async (req, res, next) => {
-    console.log(req.query);
+    // console.log(req.query);
 
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -86,7 +88,7 @@ const getFareController = asyncHandler(async (req, res, next) => {
 })
 
 const confirmRideController = asyncHandler(async (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
@@ -97,9 +99,17 @@ const confirmRideController = asyncHandler(async (req, res, next) => {
 
     const ride = await confirmRide({ rideId, driver });
 
+    
     if (!ride) {
         throw new ApiError(400, "Error While Confirming Ride At controller");
     }
+    // if the ride is confirmed(generated) then send the message to the socket 
+    console.log("User Socket Id At confirmRide Controller", ride.userId.socketId);
+    
+    sendMessageToSocketId(ride.userId.socketId , {
+        event: 'confirm-ride',
+        data: ride
+    }) // this message will triger to user that ride was confirmed by the driver
 
     return res.status(200).json(
         new ApiResponse(200, "Ride Confirmed Successfully", { ride })
@@ -112,3 +122,8 @@ export {
     getFareController,
     confirmRideController
 };
+
+/*
+    const rideWithUser = await Rides.findOne({ _id: ride._id }).populate('userId')
+populate is used to add user data in the usedId of the ride model . User Data have OTP also so to not send otp to to ride we have been make the ride.opt to empty before 
+*/

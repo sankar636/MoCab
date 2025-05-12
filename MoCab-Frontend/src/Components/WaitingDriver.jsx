@@ -2,8 +2,8 @@ import React from 'react'
 import Car from '../assets/Car.png'
 import DriverProfile from '../assets/DriverProfile.jpg'
 const WaitingDriver = (props) => {
-    // console.log("Driver Found Props: ", props);
-    const Amount = props.fare[props.vehicleType]
+    console.log("Driver Found Props: ", props);
+    // const Amount = props.fare[props.vehicleType]
 
     return (
         <div>
@@ -21,10 +21,10 @@ const WaitingDriver = (props) => {
                     <div className='h-14 w-14 rounded-full absolute top-8 left-7'><img className='h-full w-full rounded-full' src={DriverProfile} alt="Profile" /></div>
                 </div>
                 <div className='flex flex-col items-end'>
-                    <h3 className='font-semibold'>Sankar</h3>
-                    <h1 className='font-bold'>OS01P2050</h1>
-                    <h4>Black SUV</h4>
-                    <h1>Capacity - <span className='font-bold'>4</span></h1>
+                    <h3 className='font-semibold'>{props.rideConfirmByDriver?.driverId.fullname.firstname}</h3>
+                    <h1 className='font-bold'>{props.rideConfirmByDriver?.driverId.vehicle.plate}</h1>
+                    <h4>Color: {props.rideConfirmByDriver?.driverId.vehicle.color}</h4>
+                    <h1>Capacity - <span className='font-bold'>{props.rideConfirmByDriver?.driverId.vehicle.capacity}</span></h1>
                 </div>
             </div>
             <div className='flex flex-row justify-between gap-4 p-2'>
@@ -42,18 +42,26 @@ const WaitingDriver = (props) => {
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-map-pin-user-fill"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>Driver Location</h1>
-                    <h3>Patia</h3>
+                    <h1 className='font-semibold'>Your Location</h1>
+                    <h3>{props.rideConfirmByDriver?.pickupLocation}</h3>
                 </div>
             </div>
             <hr className="border-t-2 border-gray-300" />
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-money-rupee-circle-line"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>&#8377;{Amount}</h1>
+                    <h1 className='font-semibold'>&#8377;{props.rideConfirmByDriver?.fare}</h1>
                     <h3>Cash Cash</h3>
                 </div>
             </div>
+            <div className='flex flex-row justify-left gap-4 p-2'>
+                {/* <h5 className='flex justify-center items-center'><i className="ri-money-rupee-circle-line"></i></h5> */}
+                <div className='flex flex-col'>
+                    <h1 className='font-semibold'>{props.rideConfirmByDriver?.otp}</h1>
+                    <h3>OTP: </h3>
+                </div>
+            </div>
+
         </div>
     )
 }

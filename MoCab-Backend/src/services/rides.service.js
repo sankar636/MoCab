@@ -17,10 +17,10 @@ const getFare = async (pickup, destination) => {
     const distanceStr = distanceTime.distance;
     const kmMatch = distanceStr.match(/[\d,\.]+/); // extract the number with comma or dot
     const distanceInKm = kmMatch ? parseFloat(kmMatch[0].replace(",", "")) : 0;
-    console.log("Distance", distanceInKm);
+    // console.log("Distance", distanceInKm);
 
     const durationInMins = parseFloat(distanceTime.duration.replace(" mins", ""));
-    console.log("Duration", durationInMins);
+    // console.log("Duration", durationInMins);
 
 
     const baseFare = {
@@ -70,9 +70,9 @@ const createRide = async ({ userId, pickup, destination, vehicleType }) => {
     }
 
     const fare = await getFare(pickup, destination);
-    console.log("Fare", fare);
+    // console.log("Fare", fare);
     const OTP = generateOTP();
-    console.log("OTP is", OTP);
+    // console.log("OTP is", OTP);
 
     const ride = await Rides.create({
         userId,
@@ -100,10 +100,11 @@ const confirmRide = async ({ rideId, driver }) => {
     );
 
     const ride = await Rides.findOne({ _id: rideId })
-        .populate("user")
-        .populate("driver")
+        .populate("userId")
+        .populate("driverId")
         .select("+otp");
-
+    console.log("Ride For Confirm Ride",ride);
+    
     if (!ride) {
         throw new ApiError(400, "Ride not confirmed or found");
     }

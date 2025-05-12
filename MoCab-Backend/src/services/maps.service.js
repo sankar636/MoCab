@@ -80,7 +80,7 @@ const autoCompleteSuggession = async (input) => {
 
 const driverInTheRadious = async (lng, lat, radius) => {
     try {
-        console.log("Searching for drivers within radius:", { lng, lat, radius });
+        // console.log("Searching for drivers within radius:", { lng, lat, radius });
 
         const drivers = await Driver.find({
             location: {
@@ -91,7 +91,7 @@ const driverInTheRadious = async (lng, lat, radius) => {
             // isAvailable: true // Ensure only available drivers are returned
         });
 
-        console.log("Drivers found:", drivers);
+        // console.log("Drivers found:", drivers);
         return drivers;
     } catch (error) {
         console.error("Error finding drivers in radius:", error);
