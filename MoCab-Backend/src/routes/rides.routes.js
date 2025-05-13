@@ -3,7 +3,7 @@ import { body, query } from "express-validator";
 
 const router = Router()
 
-import { confirmRideController, createRideController, getFareController } from "../controllers/rides.controller.js";
+import { confirmRideController, createRideController, getFareController, startRideController } from "../controllers/rides.controller.js";
 import { verifyDriverJWT, verifyJWT } from "../middlewares/auth.middleware.js";
 
 router.route('/create').post(
@@ -34,7 +34,14 @@ router.route('/confirm').post(
     confirmRideController
 );
 
-// router.route('/start').get()
+router.route('/start').get(
+    [
+        verifyDriverJWT,
+        query('rideId').isMongoId().withMessage("Invalid Ride Id"),
+        query('otp').isString().isLength({min:6, max: 6}).withMessage('Invalid OTP')
+    ],
+    startRideController
+)
 
 // router.route('/end').post()
 

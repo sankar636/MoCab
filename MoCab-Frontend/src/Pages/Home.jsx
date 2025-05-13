@@ -147,10 +147,20 @@ if (Socket) {
   // After confirmation of ride by driver the socket send message. Now here we have to get it 
   Socket.on('confirm-ride', (data) => {
     // console.log("Ride Data",data);   
-    console.log(data);
+    // console.log(data);
     setRideConfirmByDriver(data)
     setWaitingForDriver(true)    
   })
+
+  // After Driver Enter tht OTP given by the user then this message will come   
+  Socket.on('started-ride', (data) => {
+    // console.log("Ride Data",data);   
+    console.log(data);
+    setWaitingForDriver(false)
+    navigate('/Ride', {state: {data}})
+  })
+
+
 
   useGSAP(function () {
     if (panelOpen) {

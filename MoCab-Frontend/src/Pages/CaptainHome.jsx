@@ -36,11 +36,11 @@ const CaptainHome = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           const { latitude, longitude } = position.coords;
-          console.log({userId: driver._id,
-            location: {
-            lat: latitude,
-            lng: longitude,
-          }});
+          // console.log({userId: driver._id,
+          //   location: {
+          //   lat: latitude,
+          //   lng: longitude,
+          // }});
 
           Socket.emit('update-location-driver', {
             userId: driver._id,
@@ -82,6 +82,9 @@ const CaptainHome = () => {
       console.log("Error While Confirm Ride By Driver",error);      
     }
   }
+
+
+
   useGSAP(function () {
     if (ridePopUpPanel) {
       gsap.to(ridePopUpRef.current, {
@@ -130,7 +133,7 @@ const CaptainHome = () => {
           />
         </div>
         <div ref={confirmRidePopUpRef} className='bottom-0 w-full fixed translate-y-full h-full bg-gray-50 px-3 py-8'>
-          <ConfirmCaptainRide setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}  userDeatilsToDriver={userDeatilsToDriver}/>
+          <ConfirmCaptainRide setRidePopUpPanel={setRidePopUpPanel} setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}  userDeatilsToDriver={userDeatilsToDriver} ride={ride}/>
         </div>
       </div>
     </div>

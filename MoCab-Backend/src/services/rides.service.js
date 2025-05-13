@@ -103,7 +103,7 @@ const confirmRide = async ({ rideId, driver }) => {
         .populate("userId")
         .populate("driverId")
         .select("+otp");
-    console.log("Ride For Confirm Ride",ride);
+    // console.log("Ride For Confirm Ride",ride);
     
     if (!ride) {
         throw new ApiError(400, "Ride not confirmed or found");
@@ -112,8 +112,33 @@ const confirmRide = async ({ rideId, driver }) => {
     return ride;
 };
 
-const startRide = async ({ rideId, otp, driver }) => {
-    
+const startRide = async ({ rideId, otp, driverId }) => {
+    if (!rideId || !otp) {
+        throw new ApiError(400, "Ride Id and OTP are required");
+    }
+
+    const ride = await Rides.findOne({ _id: rideId })
+        .populate('userId')
+        .populate('driverId')
+        .select('+otp');
+
+    if (!ride) {
+        throw new ApiError(400, "Ride not found");
+    }
+    if (ride.status !== 'accepted') {
+        throw new ApiError(400, "Ride not accepted");
+    }
+    if (ride.otp !== otp) { // Fix: Compare `ride.otp` with the passed `otp`
+        throw new ApiError(400, "Invalid OTP");
+    }
+
+    await Rides.findByIdAndUpdate(
+        { _id: rideId },
+        {
+            status: "in-processed",
+        }
+    );
+    return ride;
 }
 
 const endRide = async ({ rideId, driver }) => {

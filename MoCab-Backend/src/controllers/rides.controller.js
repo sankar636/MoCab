@@ -1,5 +1,5 @@
 import asyncHandler from "../utils/AsyncHandler.js";
-import { createRide, getFare, confirmRide } from "../services/rides.service.js";
+import { createRide, getFare, confirmRide, startRide } from "../services/rides.service.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { validationResult } from "express-validator";
@@ -116,11 +116,39 @@ const confirmRideController = asyncHandler(async (req, res, next) => {
     );
 });
 
+const startRideController = asyncHandler(async(req,res) => {
+    console.log("StartRide",req.query);    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
+    }
+
+    const { otp, rideId } = req.query
+
+    const driverId = req.driver
+    console.log("Driver Id",driverId);
+    
+    const ride = await startRide({rideId, otp, driverId})
+    if(!ride){
+        throw new ApiError(400,"Ride is not found")
+    }
+    console.log("Ride",ride);
+    
+    sendMessageToSocketId(ride.userId.socketId,{
+        event:'started-ride',
+        data: ride
+    })
+
+    return res.status(200).json(
+        new ApiResponse(200, "Ride start Successfully", { ride })
+    );
+})
 
 export {
     createRideController,
     getFareController,
-    confirmRideController
+    confirmRideController,
+    startRideController
 };
 
 /*

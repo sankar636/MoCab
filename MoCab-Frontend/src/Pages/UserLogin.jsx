@@ -31,7 +31,7 @@ const UserLogin = () => {
     const baseURL = import.meta.env.VITE_BASE_URL;
     try {
       const response = await axios.post(`${baseURL}/user/login`, userData);
-      console.log("Login User:", response);
+      // console.log("Login User:", response);
 
       if (response.status === 200) {
         const data = response.data.data; // this is because of the structure of the code
@@ -50,7 +50,7 @@ const UserLogin = () => {
     // After the form submit email and password set to empty
     setEmail("")
     setPassword("")
-    console.log("Form Sbmited Successfully");
+    // console.log("Form Sbmited Successfully");
 
   }
   return (

@@ -3,7 +3,7 @@ import DriverProfile from '../assets/DriverProfile.jpg'
 
 
 const RidePopUp = (props) => {
-    console.log("RidePopUp", props);
+    // console.log("RidePopUp", props);
     
     return (
         <div>
