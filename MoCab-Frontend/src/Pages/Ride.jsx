@@ -2,8 +2,14 @@ import React from 'react'
 import Logo from '../assets/Logo1.png'
 import Car from '../assets/Car.png'
 import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 const Ride = () => {
 
+
+  const location = useLocation()
+  // console.log(location);
+  
+  const rideData = location.state?.data
   return (
     <div className='h-screen'>
       <div className='h-1/2 w-screen relative overflow-hidden'>
@@ -21,9 +27,9 @@ const Ride = () => {
             <img src={Car} alt="Car" className='h-20' />
           </div>
           <div className='flex flex-col items-end'>
-            <h3 className='font-semibold'>Sankar</h3>
-            <h1 className='font-bold'>OS01P2050</h1>
-            <h4>Black SUV</h4>
+            <h3 className='font-semibold'>{rideData?.driverId.fullname.firstname + " " + rideData?.driverId.fullname.lastname}</h3>
+            <h1 className='font-bold'>{rideData?.driverId.vehicle.plate}</h1>
+            <h4 className='capitalize'>Color: {rideData?.driverId.vehiclecolor + " " + rideData?.driverId.vehicleType}</h4>
             {/* <h1>Capacity - <span className='font-bold'>4</span></h1> */}
           </div>
         </div>
@@ -31,15 +37,15 @@ const Ride = () => {
         <div className='flex flex-row justify-left gap-4 p-2'>
           <h5 className='flex justify-center items-center'><i className="ri-map-pin-user-fill"></i></h5>
           <div className='flex flex-col'>
-            <h1 className='font-semibold'>Driver Location</h1>
-            <h3>Patia</h3>
+            <h1 className='font-semibold'>Destination</h1>
+            <h3>{rideData?.destinationLocation}</h3>
           </div>
         </div>
         <hr className="border-t-2 border-gray-300" />
         <div className='flex flex-row justify-left gap-4 p-2'>
           <h5 className='flex justify-center items-center'><i className="ri-money-rupee-circle-line"></i></h5>
           <div className='flex flex-col'>
-            <h1 className='font-semibold'>&#8377;190.5</h1>
+            <h1 className='font-semibold'>&#8377;{rideData?.fare}</h1>
             <h3>Cash Cash</h3>
           </div>
         </div>

@@ -5,11 +5,18 @@ import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import FinishRide from '../Components/FinishRide';
 
+import { useLocation } from 'react-router-dom'; // used to access current Location of the object 
+
 const CaptainRide = () => {
 
     const [finishRidePanel, setFinishRidePanel] = useState(false)
 
     const finishRideRef = useRef(null)
+
+    const location = useLocation()
+    console.log("Location",location);
+    
+    const rideData = location.state?.ride // commented below about this and This Part will used for finish Ride
 
     useGSAP(function () {
         if (finishRidePanel) {
@@ -23,6 +30,7 @@ const CaptainRide = () => {
         }
     }, [finishRidePanel])
     return (
+        
         <div className="h-screen flex flex-col">
             <div className="flex-grow w-screen relative overflow-hidden">
                 <img src={Logo} alt="MoCaB" className="w-24 absolute left-1 top-1 z-10" />
@@ -57,10 +65,16 @@ const CaptainRide = () => {
                 </div>
             </div>
             <div ref={finishRideRef} className='bottom-0 w-full fixed translate-y-full h-full bg-gray-50 px-3 py-8 z-50'>
-                <FinishRide setFinishRidePanel={setFinishRidePanel}/>
+                <FinishRide 
+                rideData={rideData}
+                setFinishRidePanel={setFinishRidePanel}/>
             </div>
         </div>
     );
 };
 
 export default CaptainRide;
+
+/*
+The rideData in the CaptainRide.jsx component comes from the state object passed via the navigate function in the ConfirmCaptainRide.jsx component.
+*/

@@ -2,7 +2,7 @@ import React from 'react'
 import Car from '../assets/Car.png'
 import DriverProfile from '../assets/DriverProfile.jpg'
 const WaitingDriver = (props) => {
-    console.log("Driver Found Props: ", props);
+    // console.log("Driver Found Props: ", props);
     // const Amount = props.fare[props.vehicleType]
 
     return (

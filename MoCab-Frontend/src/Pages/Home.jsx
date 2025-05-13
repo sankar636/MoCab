@@ -155,9 +155,10 @@ if (Socket) {
   // After Driver Enter tht OTP given by the user then this message will come   
   Socket.on('started-ride', (data) => {
     // console.log("Ride Data",data);   
-    console.log(data);
+    console.log("started ride data",data);
     setWaitingForDriver(false)
-    navigate('/Ride', {state: {data}})
+    navigate('/Ride', {state: {data}}) 
+    //// Pass `data` safely // This pass ride data in state which is accessed in CaptainRide component
   })
 
 

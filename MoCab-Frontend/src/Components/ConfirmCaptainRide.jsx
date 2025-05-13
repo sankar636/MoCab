@@ -23,7 +23,7 @@ const ConfirmCaptainRide = (props) => {
             if (response.status === 200) {
                 props.setRidePopUpPanel(false);
                 props.setConfirmRidePopUpPanel(false);
-                navigate('/captain-ride', { state: { ride: props.ride } }); // Pass `props.ride` safely
+                navigate('/captain-ride', { state: { ride: props.ride } }); // Pass `props.ride` safely // This pass ride data in state which is accessed in CaptainRide component
             }
         } catch (error) {
             console.error('Error While Starting The Ride:', error);

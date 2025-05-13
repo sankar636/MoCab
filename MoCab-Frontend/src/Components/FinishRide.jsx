@@ -1,7 +1,7 @@
 import React from 'react'
 import DriverProfile from '../assets/DriverProfile.jpg'
 import { Link } from 'react-router-dom'
-const FinishRide = () => {
+const FinishRide = (props) => {
     const submitHandeler = (e) => {
         e.prevendDefault()
     }
@@ -12,7 +12,7 @@ const FinishRide = () => {
                 <div>
                     <img src={DriverProfile} alt="Driver" className="w-16 h-16 rounded-full object-cover" />
                 </div>
-                <h1 className="text-lg font-semibold">SankarShan</h1>
+                <h1 className="text-lg font-semibold">{props.rideData?.userId.fullname.firstname + " " + props.rideData?.userId.fullname.lastname }</h1>
                 <div className="text-right">
                     <h4 className="text-xl font-bold text-green-600">2.5 KM</h4>
                 </div>
@@ -20,23 +20,23 @@ const FinishRide = () => {
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-map-pin-user-fill"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>Driver Location</h1>
-                    <h3>Bhubaneswar</h3>
+                    <h1 className='font-semibold'>PickUp Location</h1>
+                    <h3>{props.rideData?.pickupLocation}</h3>
                 </div>
             </div>
             <hr className="border-t-2 border-gray-300" />
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-map-pin-2-fill"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>User Location</h1>
-                    <h3>Cuttack</h3>
+                    <h1 className='font-semibold'>Destination Location</h1>
+                    <h3>{props.rideData?.destinationLocation}</h3>
                 </div>
             </div>
             <hr className="border-t-2 border-gray-300" />
             <div className='flex flex-row justify-left gap-4 p-2'>
                 <h5 className='flex justify-center items-center'><i className="ri-money-rupee-circle-line"></i></h5>
                 <div className='flex flex-col'>
-                    <h1 className='font-semibold'>&#8377;190.5</h1>
+                    <h1 className='font-semibold'>&#8377;{props.rideData?.fare}</h1>
                     <h3>Cash Cash</h3>
                 </div>
             </div>
