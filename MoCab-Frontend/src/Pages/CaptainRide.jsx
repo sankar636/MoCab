@@ -6,6 +6,7 @@ import { useGSAP } from '@gsap/react'
 import FinishRide from '../Components/FinishRide';
 
 import { useLocation } from 'react-router-dom'; // used to access current Location of the object 
+import LiveTracking from '../Components/LiveTracking';
 
 const CaptainRide = () => {
 
@@ -14,9 +15,11 @@ const CaptainRide = () => {
     const finishRideRef = useRef(null)
 
     const location = useLocation()
-    console.log("Location",location);
+    // console.log("Location",location);
     
     const rideData = location.state?.ride // commented below about this and This Part will used for finish Ride
+    console.log("rideData",rideData);
+    
 
     useGSAP(function () {
         if (finishRidePanel) {
@@ -43,11 +46,7 @@ const CaptainRide = () => {
                 </Link>
 
                 <div className="h-full w-full">
-                    <img
-                        src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
-                        alt="Captain Ride Animation"
-                        className="h-full w-full object-cover"
-                    />
+                    <LiveTracking className="h-full w-full object-cover"/>
                 </div>
             </div>
 

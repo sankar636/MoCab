@@ -141,9 +141,35 @@ const startRide = async ({ rideId, otp, driverId }) => {
     return ride;
 }
 
-const endRide = async ({ rideId, driver }) => {
+const endRide = async ({ rideId, driverId }) => {
+    if (!rideId) {
+        throw new ApiError(400, "Ride Id is required");
+    }
 
-}
+    const ride = await Rides.findById({ _id: rideId }).populate('userId');
+
+    if (!ride) {
+        throw new ApiError(400, "Ride not found");
+    }
+
+    if (ride.status !== "in-processed") {
+        throw new ApiError(400, "Ride is not in process");
+    }
+
+    // if (ride.driverId.toString() !== driverId.toString()) {
+    //     throw new ApiError(403, "Driver is not authorized to end this ride");
+    // }
+
+    await Rides.findByIdAndUpdate(
+        { _id: rideId },
+        {
+            status: "completed",
+        }
+    );
+
+    return ride;
+};
+
 export {
     getFare,
     createRide,

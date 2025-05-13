@@ -21,17 +21,19 @@ function initializeSocket(server) {
         // console.log(`Client connected: ${socket.id}`); // Log when a client connects
 
         socket.on('join', async (data) => {
-            // console.log('Join event received:', data); // Log the join event
+            console.log('Join event received:', data); // Log the join event
             try {
                 const { userId, userType } = data;
 
                 if (userType === 'user') {
                     await User.findByIdAndUpdate(userId, { socketId: socket.id });
+                    console.log(`User socketId updated: ${socket.id}`);
                 } else if (userType === 'driver') {
                     await Driver.findByIdAndUpdate(userId, { socketId: socket.id });
+                    console.log(`Driver socketId updated: ${socket.id}`);
                 }
             } catch (error) {
-                // console.error('Error in join handler:', error);
+                console.error('Error in join handler:', error);
                 socket.emit('error', { message: 'Server error in join event' });
             }
         });
@@ -76,7 +78,7 @@ function initializeSocket(server) {
 
 
 const sendMessageToSocketId = (socketId, messageObject) => {
-    console.log(messageObject);
+    // console.log(messageObject);
 
     if (io) {
         io.to(socketId).emit(messageObject.event, messageObject.data)

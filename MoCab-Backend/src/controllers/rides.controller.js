@@ -1,5 +1,5 @@
 import asyncHandler from "../utils/AsyncHandler.js";
-import { createRide, getFare, confirmRide, startRide } from "../services/rides.service.js";
+import { createRide, getFare, confirmRide, startRide, endRide } from "../services/rides.service.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { validationResult } from "express-validator";
@@ -8,7 +8,7 @@ import { driverInTheRadious, getAddressCoordinate } from "../services/maps.servi
 import Rides from "../models/rides.model.js";
 
 const createRideController = asyncHandler(async (req, res, next) => {
-    // console.log("DATA comes fron body", req.body);
+    console.log("DATA comes fron body", req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
@@ -117,7 +117,7 @@ const confirmRideController = asyncHandler(async (req, res, next) => {
 });
 
 const startRideController = asyncHandler(async(req,res) => {
-    console.log("StartRide",req.query);    
+    // console.log("StartRide",req.query);    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
@@ -144,11 +144,40 @@ const startRideController = asyncHandler(async(req,res) => {
     );
 })
 
+const endRideController = asyncHandler(async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
+    }
+
+    const { rideId } = req.body;
+    const driverId = req.driver;
+
+    const ride = await endRide({ rideId, driverId });
+    if (!ride) {
+        throw new ApiError(400, "Ride not found");
+    }
+
+    console.log("Ride At endRide Controller",ride);
+    
+
+    console.log("User Socket Id in endRideController:", ride.userId.socketId); // Log socketId
+    sendMessageToSocketId(ride.userId.socketId, {
+        event: 'ended-ride',
+        data: ride,
+    });    
+
+    return res.status(200).json(
+        new ApiResponse(200, "Ride ended successfully", { ride })
+    );
+});
+
 export {
     createRideController,
     getFareController,
     confirmRideController,
-    startRideController
+    startRideController,
+    endRideController
 };
 
 /*

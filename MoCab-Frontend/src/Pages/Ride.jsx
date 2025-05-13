@@ -1,15 +1,44 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Logo from '../assets/Logo1.png'
 import Car from '../assets/Car.png'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+
+
+import { UserDataContext } from '../Context/UserContext.jsx'
+import { SocketContext } from '../Context/SocketContext.jsx'
+
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import LiveTracking from '../Components/LiveTracking.jsx'
 const Ride = () => {
 
 
   const location = useLocation()
   // console.log(location);
-  
+
   const rideData = location.state?.data
+
+
+  const navigate = useNavigate()
+
+  const { user } = useContext(UserDataContext)
+  const { Socket } = useContext(SocketContext)
+
+  useEffect(() => {
+    const handleEndRide = (data) => {
+      console.log(data);      
+      navigate('/home');
+    };
+
+    Socket.on('ended-ride', handleEndRide);
+
+    // Cleanup to avoid multiple registrations
+    return () => {
+      Socket.off('ended-ride', handleEndRide);
+    };
+  }, [Socket, navigate]);
+
   return (
     <div className='h-screen'>
       <div className='h-1/2 w-screen relative overflow-hidden'>
@@ -18,7 +47,7 @@ const Ride = () => {
           <i className="ri-home-9-line"></i>
         </Link>
         <div className='h-screen w-screen'>
-          <img src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif" alt="" className='h-full w-full object-cover' />
+          <LiveTracking  className='h-full w-full object-cover'/>
         </div>
       </div>
       <div className='h-1/2 px-2'>
@@ -29,7 +58,7 @@ const Ride = () => {
           <div className='flex flex-col items-end'>
             <h3 className='font-semibold'>{rideData?.driverId.fullname.firstname + " " + rideData?.driverId.fullname.lastname}</h3>
             <h1 className='font-bold'>{rideData?.driverId.vehicle.plate}</h1>
-            <h4 className='capitalize'>Color: {rideData?.driverId.vehiclecolor + " " + rideData?.driverId.vehicleType}</h4>
+            <h4 className='capitalize'>Color: {rideData?.driverId.vehicle.color + " " + rideData?.driverId.vehicle.vehicleType}</h4>
             {/* <h1>Capacity - <span className='font-bold'>4</span></h1> */}
           </div>
         </div>
