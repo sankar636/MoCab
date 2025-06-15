@@ -67,10 +67,12 @@ const ConfirmRide = (props) => {
                 </div>
             </div>
             <button 
-            onClick={async() => {
-                props.setVehicleFound(true)
-                props.setConfirmRidePanelOpen(false)
-                await props.initiateRide()
+            onClick={async () => {
+                props.setVehicleFound(true);
+                props.setConfirmRidePanelOpen(false);
+                await props.initiateRide();
+                // Ensure other panels are hidden
+                props.setVehiclePanelOpen(false);
             }}
             className='w-full bg-green-400 py-2 font-semibold rounded-full'
             >Conform</button>

@@ -167,7 +167,7 @@ if (Socket) {
     if (panelOpen) {
       gsap.to(panelRef.current, {
         height: '60%',
-        padding: 24
+        padding: "20px",
       })
       gsap.to(panelCloseRef.current, {
         opacity: '1'
@@ -175,7 +175,7 @@ if (Socket) {
     } else {
       gsap.to(panelRef.current, {
         height: '0%',
-        padding: 0
+        padding: 0,
       })
       gsap.to(panelCloseRef.current, {
         opacity: '0'
@@ -186,26 +186,38 @@ if (Socket) {
   useGSAP(function () {
     if (vehiclePanelOpen) {
       gsap.to(vehicleRef.current, {
-        transform: 'translate(0,0)'
-      })
+        transform: 'translate(0,0)',
+        zIndex: 15, // Ensure VehiclePanel is above others
+      });
+      gsap.to(confirmRideRef.current, {
+        transform: 'translateY(100%)',
+        zIndex: 10, // Reset ConfirmRide z-index when VehiclePanel is open
+      });
     } else {
       gsap.to(vehicleRef.current, {
-        transform: 'translateY(100%)'
-      })
+        transform: 'translateY(100%)',
+        zIndex: 10, // Reset z-index when closed
+      });
     }
-  }, [vehiclePanelOpen])
+  }, [vehiclePanelOpen]);
 
   useGSAP(function () {
     if (confirmRidePanelOpen) {
       gsap.to(confirmRideRef.current, {
-        transform: 'translate(0,0)'
-      })
+        transform: 'translate(0,0)',
+        zIndex: 20, // Ensure ConfirmRide panel is on top
+      });
+      gsap.to(vehicleRef.current, {
+        transform: 'translateY(100%)',
+        zIndex: 10, // Reset VehiclePanel z-index when ConfirmRide is open
+      });
     } else {
       gsap.to(confirmRideRef.current, {
-        transform: 'translateY(100%)'
-      })
+        transform: 'translateY(100%)',
+        zIndex: 10, // Reset z-index when closed
+      });
     }
-  }, [confirmRidePanelOpen])
+  }, [confirmRidePanelOpen]);
 
   useGSAP(function () {
     if (vehicleFound) {
@@ -222,12 +234,14 @@ if (Socket) {
   useGSAP(function () {
     if (waitingForDriver) {
       gsap.to(driverFoundRef.current, {
-        transform: 'translate(0,0)'
-      })
+        transform: 'translate(0,0)',
+        zIndex: 20, // Ensure LookingDriver panel is on top
+      });
     } else {
       gsap.to(driverFoundRef.current, {
-        transform: 'translateY(100%)'
-      })
+        transform: 'translateY(100%)',
+        zIndex: 10, // Reset z-index when closed
+      });
     }
   }, [waitingForDriver])
 
@@ -261,7 +275,7 @@ if (Socket) {
         </div>
 
         {/* Background overlay panel */}
-        <div className="absolute top-0 left-0 h-screen w-full flex flex-col justify-end z-0 ">
+        <div className="absolute top-0 left-0 h-screen w-full flex flex-col justify-end z-12 ">
           <div className="h-[35%] py-5 px-5 bg-white relative">
             <p
               className="absolute opacity-0 top-1/6 right-6 text-3xl font-semibold"
@@ -276,7 +290,7 @@ if (Socket) {
               onSubmit={(e) => { submitHandler(e) }}
 
             >
-              <div className="w-1 h-[60px] bg-black left-9 top-1/2 absolute"></div>
+              <div className="w-1 h-[60px] bg-black left-9 top-[40%] absolute"></div>
               <input
                 type="text"
                 value={pick}
@@ -303,11 +317,11 @@ if (Socket) {
                 placeholder="Enter Your Destination"
               />
             </form>
-            <button className='w-full text-white text-2xl bg-blue-600 mt-4 py-2 rounded'
+            <button className='w-full text-white text-2xl bg-blue-600 mt-4 py-4 rounded'
               onClick={() => findTrip()}
             >Find A Trip</button>
           </div>
-          <div ref={panelRef} className="h-0 bg-white">
+          <div ref={panelRef} className="h-0 bg-white z-10">
             <LocationSearchPanel
               setVehiclePanelOpen={setVehiclePanelOpen}
               setPanelOpen={setPanelOpen}
@@ -322,7 +336,7 @@ if (Socket) {
         {/* Bottom panels */}
         <div
           ref={vehicleRef}
-          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8"
+          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3"
         >
           <VehiclePanel
             setPanelOpen={setPanelOpen}
@@ -334,7 +348,7 @@ if (Socket) {
         </div>
         <div
           ref={confirmRideRef}
-          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8"
+          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3"
         >
           <ConfirmRide
             setVehiclePanelOpen={setVehiclePanelOpen}
@@ -351,7 +365,7 @@ if (Socket) {
         </div>
         <div
           ref={vehicleFoundRef}
-          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8"
+          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3"
         >
           <LookingDriver
             setConfirmRidePanelOpen={setConfirmRidePanelOpen}
@@ -369,7 +383,7 @@ if (Socket) {
         </div>
         <div
           ref={driverFoundRef}
-          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8"
+          className="bottom-0 w-full fixed translate-y-full bg-gray-50 px-3 py-8 z-10"
         >
           <WaitingDriver
             setVehicleFound={setVehicleFound}
