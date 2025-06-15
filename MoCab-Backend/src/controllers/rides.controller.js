@@ -1,4 +1,4 @@
-import asyncHandler from "../utils/AsyncHandler.js";
+import AsyncHandler from "../utils/AsyncHandler.js";
 import { createRide, getFare, confirmRide, startRide, endRide } from "../services/rides.service.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
@@ -7,7 +7,7 @@ import { sendMessageToSocketId } from "../socket.js";
 import { driverInTheRadious, getAddressCoordinate } from "../services/maps.service.js";
 import Rides from "../models/rides.model.js";
 
-const createRideController = asyncHandler(async (req, res, next) => {
+const createRideController = AsyncHandler(async (req, res, next) => {
     console.log("DATA comes fron body", req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -66,7 +66,7 @@ const createRideController = asyncHandler(async (req, res, next) => {
     // );
 });
 
-const getFareController = asyncHandler(async (req, res, next) => {
+const getFareController = AsyncHandler(async (req, res, next) => {
     // console.log(req.query);
 
     const errors = validationResult(req)
@@ -87,7 +87,7 @@ const getFareController = asyncHandler(async (req, res, next) => {
     )
 })
 
-const confirmRideController = asyncHandler(async (req, res, next) => {
+const confirmRideController = AsyncHandler(async (req, res, next) => {
     // console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -116,7 +116,7 @@ const confirmRideController = asyncHandler(async (req, res, next) => {
     );
 });
 
-const startRideController = asyncHandler(async(req,res) => {
+const startRideController = AsyncHandler(async(req,res) => {
     // console.log("StartRide",req.query);    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -144,7 +144,7 @@ const startRideController = asyncHandler(async(req,res) => {
     );
 })
 
-const endRideController = asyncHandler(async (req, res) => {
+const endRideController = AsyncHandler(async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));

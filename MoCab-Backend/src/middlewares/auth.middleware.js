@@ -1,12 +1,12 @@
 import User from "../models/user.model.js";
 import ApiError from "../utils/ApiError.js";
-import asyncHandler from "../utils/AsyncHandler.js";
+import AsyncHandler from "../utils/AsyncHandler.js";
 import jwt from 'jsonwebtoken'
 import BlacklistedToken from "../models/blackListedToken.model.js";
 import Driver from "../models/driver.model.js";
 
 
-export const verifyJWT = asyncHandler(async (req, res, next) => {
+export const verifyJWT = AsyncHandler(async (req, res, next) => {
     // console.log("Cookies:", req.cookies);
     // console.log("Authorization Header:", req.header("Authorization"));
 
@@ -58,7 +58,7 @@ this part check
 
 //Jwt verrification for Driver
 
-export const verifyDriverJWT = asyncHandler(async (req, res, next) => {
+export const verifyDriverJWT = AsyncHandler(async (req, res, next) => {
     // console.log("Cookies:", req.cookies);
     // console.log("Authorization Header:", req.header("Authorization"));
 

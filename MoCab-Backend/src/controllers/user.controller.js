@@ -1,5 +1,5 @@
 
-import asyncHandler from '../utils/AsyncHandler.js'
+import AsyncHandler from '../utils/AsyncHandler.js'
 import ApiError from '../utils/ApiError.js'
 import User from '../models/user.model.js'
 import { createUser } from '../services/user.service.js'
@@ -7,7 +7,7 @@ import { validationResult } from 'express-validator'
 import ApiResponse from '../utils/ApiResponse.js'
 import BlacklistedToken from '../models/blackListedToken.model.js'
 
-const registerUser = asyncHandler(async (req, res) => {
+const registerUser = AsyncHandler(async (req, res) => {
     console.log(req.body);
     const errors = validationResult(req)
     if (!errors.isEmpty()) {  // i.e if error is not empty(means there is some error in body of userRouter)
@@ -42,7 +42,7 @@ const registerUser = asyncHandler(async (req, res) => {
     )
 })
 
-const loginUser = asyncHandler(async (req, res) => {
+const loginUser = AsyncHandler(async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {  // i.e if error is not empty(means there is some error in body of userRouter)
         return res.status(400).json(new ApiError(400, "Validation   errors", errors.array()));
@@ -83,7 +83,7 @@ const loginUser = asyncHandler(async (req, res) => {
     )
 })
 
-const getUserProfile = asyncHandler(async (req, res, next) => {
+const getUserProfile = AsyncHandler(async (req, res, next) => {
     const userProfile = req.user
     if(!userProfile){
         throw new ApiError(401, "user profile not found")
@@ -95,7 +95,7 @@ const getUserProfile = asyncHandler(async (req, res, next) => {
 })
 /*
 // this part cause error
-const logoutUser = asyncHandler(async (req, res, next) => {
+const logoutUser = AsyncHandler(async (req, res, next) => {
     res.clearCookie('token')
 
     const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "")
@@ -108,7 +108,7 @@ const logoutUser = asyncHandler(async (req, res, next) => {
         )
 })
 */
-const logoutUser = asyncHandler(async (req, res, next) => {
+const logoutUser = AsyncHandler(async (req, res, next) => {
     res.clearCookie('token')
     // Get token BEFORE clearing it
     const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "");

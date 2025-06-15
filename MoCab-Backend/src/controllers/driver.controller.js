@@ -1,4 +1,4 @@
-import asyncHandler from "../utils/AsyncHandler.js";
+import AsyncHandler from "../utils/AsyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import Driver from "../models/driver.model.js";
 import { validationResult } from "express-validator";
@@ -6,7 +6,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import { createDriver } from "../services/driver.service.js";
 import BlacklistedToken from "../models/blackListedToken.model.js";
 
-const registerDriver = asyncHandler(async (req, res, next) => {
+const registerDriver = AsyncHandler(async (req, res, next) => {
     console.log(req.body);    
     const errors = validationResult(req)
     console.log("Validation Error",errors);    
@@ -42,7 +42,7 @@ const registerDriver = asyncHandler(async (req, res, next) => {
     )
 })
 
-const loginDriver = asyncHandler(async (req, res, next) => {
+const loginDriver = AsyncHandler(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation   errors", errors.array()));
@@ -71,7 +71,7 @@ const loginDriver = asyncHandler(async (req, res, next) => {
     )
 })
 
-const driverProfile = asyncHandler(async(req, res, next) => {
+const driverProfile = AsyncHandler(async(req, res, next) => {
     const profileOfDriver = req.driver
     if(!profileOfDriver){
         throw new ApiError(401,"Driver Profile not found")
@@ -81,7 +81,7 @@ const driverProfile = asyncHandler(async(req, res, next) => {
     )
 })
 
-const logoutDriver = asyncHandler(async (req, res, next) => {
+const logoutDriver = AsyncHandler(async (req, res, next) => {
     res.clearCookie('token') // delete previous cookies
 
     const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ", "")
@@ -93,7 +93,7 @@ const logoutDriver = asyncHandler(async (req, res, next) => {
             // Duplicate token (already blacklisted)
             console.warn("Token is already blacklisted");
         } else {
-            throw error; // Let asyncHandler deal with other errors
+            throw error; // Let AsyncHandler deal with other errors
         }
     }
 

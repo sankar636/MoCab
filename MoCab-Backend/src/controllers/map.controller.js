@@ -1,11 +1,11 @@
 import { getAddressCoordinate, getDistanceTime, autoCompleteSuggession } from "../services/maps.service.js";
 import ApiError from "../utils/ApiError.js";
-import asyncHandler from "../utils/AsyncHandler.js";
+import AsyncHandler from "../utils/AsyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import { validationResult } from 'express-validator';
 
 // Get coordinates for a given address
-const getCoordinates = asyncHandler(async (req, res, next) => {
+const getCoordinates = AsyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
@@ -24,7 +24,7 @@ const getCoordinates = asyncHandler(async (req, res, next) => {
 });
 
 // Get distance and time between two addresses
-const distanceTime = asyncHandler(async (req, res, next) => {
+const distanceTime = AsyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json(new ApiError(400, "Validation errors", errors.array()));
@@ -43,7 +43,7 @@ const distanceTime = asyncHandler(async (req, res, next) => {
 });
 
 
-const getAutoCompleteSuggession = asyncHandler(async ( req, res) => {
+const getAutoCompleteSuggession = AsyncHandler(async ( req, res) => {
     const { input } = req.query
     const suggession = await autoCompleteSuggession(input)
     if(!suggession){
