@@ -5,7 +5,7 @@ import cookieParser from 'cookie-parser'
 const app = express()
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN, // Ensure this matches the frontend's URL
+    origin: 'https://mo-cab.vercel.app', // Ensure this matches the frontend's URL
     credentials: true // Allow credentials (cookies, headers)
 }))
 
