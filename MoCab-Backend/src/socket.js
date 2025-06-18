@@ -9,7 +9,8 @@ let io;
 function initializeSocket(server) {
     io =new socketIo(server, {
         cors: {
-            origin: process.env.CORS_ORIGIN, // Ensure this matches the frontend's URL
+            // origin: process.env.CORS_ORIGIN, // Ensure this matches the frontend's URL
+            origin: 'https://mo-cab.vercel.app', // Ensure this matches the frontend's URL
             methods: ['GET', 'POST'],
             credentials: true // Ensure credentials are supported
         },
