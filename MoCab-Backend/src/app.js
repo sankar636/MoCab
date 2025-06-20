@@ -40,9 +40,9 @@ app.use(express.static("public"))
 
 app.use(cookieParser())
 
-// app.get('/', (req, res) => {
-//         res.send('<h1>Hello world</h1>');
-//     });
+app.get('/', (req, res) => {
+        res.send('<h1>Hello world</h1>');
+    });
 
 import userRouter from './routes/user.routes.js'
 // routes declaration user
