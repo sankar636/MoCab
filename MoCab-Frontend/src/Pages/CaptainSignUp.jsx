@@ -38,7 +38,7 @@ const CaptainSignUp = () => {
     };
 
     // const baseURL = import.meta.env.VITE_BASE_URL;
-    const baseURL = 'https://mocab.onrender.com';
+    const baseURL = import.meta.env.VITE_BASE_URL;
     try {
         const response = await axios.post(`${baseURL}/driver/register`, newDriverData);
         console.log("Driver Registration Response: ", response);
