@@ -13,7 +13,6 @@ const CaptainSignUp = () => {
   const [vehiclePlate, setVehiclePlate] = useState("")
   const [vehicleType, setVehicleType] = useState("")
   const [vehicleCapacity, setVehicleCapacity] = useState("")
-  // const [driverData, setDriverData] = useState({})
   
   const { driver, setDriver } = useContext(CaptainDataContext)
 
@@ -21,71 +20,49 @@ const CaptainSignUp = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log("Form Sbmited Successfully");
-    /*
-    //set userData
-    setDriverData({
-      email: email,
-      password: password,
-      fullname: {
-        firstname: firstname,
-        lastname: lastname
-      },
-      // there is no need for state like fullname, vehicle
-      vehicle: {
-        color: vehicleColor,
-        plate: vehiclePlate,
-        vehicletype: vehicleType,
-        capacity: vehicleCapacity
-      }
-    })
-    // console.log(driverData);
-    */
+    console.log("Form Submitted Successfully");
+
     const newDriverData = {
-      email: email,
-      password: password,
-      fullname: {
-        firstname: firstname,
-        lastname: lastname
-      },
-      // there is no need for state like fullname, vehicle
-      vehicle: {
-        color: vehicleColor,
-        plate: vehiclePlate,
-        vehicleType: vehicleType,
-        capacity: vehicleCapacity
-      }
-    }
-    console.log("Vehicle Type: ",vehicleType);
-    
-    const baseURL = import.meta.env.VITE_BASE_URL;
+        email: email,
+        password: password,
+        fullname: {
+            firstname: firstname,
+            lastname: lastname
+        },
+        vehicle: {
+            color: vehicleColor,
+            plate: vehiclePlate,
+            vehicleType: vehicleType,
+            capacity: vehicleCapacity
+        }
+    };
+
+    // const baseURL = import.meta.env.VITE_BASE_URL;
+    const baseURL = 'https://mocab.onrender.com';
     try {
-      // console.log("Error Before Registratation");      
-      const response = await axios.post(`${baseURL}/driver/register`,newDriverData)
-      console.log("Driver Registratation: ",response);     
-      if(response.status === 200){
-        const data = response.data.data;
-        console.log("DATA",data);
-        setDriver(data.newDriver)
-        localStorage.setItem('token',data.token)
-        navigate('/captain-home')
-      } 
+        const response = await axios.post(`${baseURL}/driver/register`, newDriverData);
+        console.log("Driver Registration Response: ", response);
+        if (response.status === 200) {
+            const data = response.data.data;
+            setDriver(data.newDriver);
+            localStorage.setItem('token', data.token);
+            navigate('/captain-home');
+        }
     } catch (error) {
-      console.log("Error While Registering the Driver", error);
-      
-    } 
+        console.error("Error While Registering the Driver:", error.response?.data || error.message);
+    }
 
-
-    // After the form submit email and password set to empty
-    setEmail("")
-    setPassword("")
-    setFirstname("")
-    setLastname("")
-    setVehicleCapacity("")
-    setVehicleColor("")
-    setVehiclePlate("")
-    setVehicleType("")
+    // Reset form fields
+    setEmail("");
+    setPassword("");
+    setFirstname("");
+    setLastname("");
+    setVehicleCapacity("");
+    setVehicleColor("");
+    setVehiclePlate("");
+    setVehicleType("");
   }
+
   return (
     <div className='flex h-screen flex-col justify-between'>
       <div >
@@ -201,6 +178,3 @@ const CaptainSignUp = () => {
 }
 
 export default CaptainSignUp
-
-
-// setDriver(data.newDriver)  ---> here i used newDriver because in backend at the time of register i created the driver data as newDriver(check driverController->register>newDriver(create))
