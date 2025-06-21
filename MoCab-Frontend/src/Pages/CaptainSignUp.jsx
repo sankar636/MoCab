@@ -62,7 +62,7 @@ const CaptainSignUp = () => {
     try {
       // console.log("Error Before Registratation");      
       const response = await axios.post(`${baseURL}/driver/register`,newDriverData)
-      // console.log("Driver Registratation: ",response);     
+      console.log("Driver Registratation: ",response);     
       if(response.status === 200){
         const data = response.data.data;
         console.log("DATA",data);
