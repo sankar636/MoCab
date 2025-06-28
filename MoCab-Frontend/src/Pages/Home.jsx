@@ -54,7 +54,7 @@ const Home = () => {
 
   useEffect(() => {
 if (Socket) {
-    Socket.emit('join', { userType: 'user', userId: user._id });
+    Socket.emit('join', { userType: 'user', userId: user?._id });
     }
   }, [Socket, user]);
 

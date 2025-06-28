@@ -41,7 +41,7 @@ const CaptainSignUp = () => {
     const baseURL = import.meta.env.VITE_BASE_URL;
     try {
         // const response = await axios.post(`${baseURL}/driver/register`, newDriverData);
-        await axios.post(`${baseURL}/driver/register`, newDriverData, {
+        const response = await axios.post(`${baseURL}/driver/register`, newDriverData, {
           headers: {
             'Content-Type': 'application/json',
           }

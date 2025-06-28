@@ -63,12 +63,12 @@ const driverSchema = new Schema({
         type: {
             type: String,
             enum: ['Point'],
-            default: 'Point',
-            // required: true
+            required: false,
+            default: undefined  // 👈 Prevents MongoDB errors if not set
         },
         coordinates: {
             type: [Number], // [longitude, latitude]
-            // required: true
+            required: false
         }
     },
     profilePicture: {
@@ -76,7 +76,7 @@ const driverSchema = new Schema({
     }
 }, { timestamps: true });
 // Methods for Driver
-
+driverSchema.index({ location: "2dsphere" });
 // Pre-save middleware: Auto-hash password before saving if modified
 driverSchema.pre('save', async function (next) {
     if (!this.isModified("password")) {

@@ -30,7 +30,7 @@ const CaptainHome = () => {
 
   useEffect(() => {
     if (!driver?._id) return;
-    Socket.emit('join', { userType: 'driver', userId: driver._id })
+    Socket.emit('join', { userType: 'driver', userId: driver?._id })
 
     const updateLocation = () => {
       if (navigator.geolocation) {

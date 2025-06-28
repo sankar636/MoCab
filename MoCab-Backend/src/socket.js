@@ -1,15 +1,15 @@
 import { Server as socketIo } from 'socket.io';
 // import { WebSocketServer } from 'ws'; // Import WebSocketServer for Node.js environments
-
+import mongoose from 'mongoose';
 import User from './models/user.model.js'
 import Driver from './models/driver.model.js'
 
 let io;
 
 function initializeSocket(server) {
-    io =new socketIo(server, {
+    io = new socketIo(server, {
         cors: {
-            // origin: process.env.CORS_ORIGIN, // Ensure this matches the frontend's URL
+            /* origin: process.env.CORS_ORIGIN, // Ensure this matches the frontend's URL*/
             origin: 'https://mo-cab.vercel.app', // Ensure this matches the frontend's URL
             methods: ['GET', 'POST'],
             credentials: true // Ensure credentials are supported
@@ -25,6 +25,9 @@ function initializeSocket(server) {
             console.log('Join event received:', data); // Log the join event
             try {
                 const { userId, userType } = data;
+                if (!mongoose.Types.ObjectId.isValid(userId)) {
+                    return socket.emit('error', { message: 'Invalid userId format' });
+                }
 
                 if (userType === 'user') {
                     await User.findByIdAndUpdate(userId, { socketId: socket.id });
@@ -42,32 +45,32 @@ function initializeSocket(server) {
         socket.on('update-location-driver', async (data) => {
             try {
                 const { userId, location } = data;
-        
+
                 if (!location || typeof location.lat !== 'number' || typeof location.lng !== 'number') {
                     console.error("Invalid location data received:", location);
                     return socket.emit('error', { message: 'Invalid Location Data' });
                 }
-        
+
                 console.log("Updating driver location:", { userId, location });
-        
+
                 await Driver.findByIdAndUpdate(userId, {
                     location: {
                         type: 'Point',
                         coordinates: [location.lng, location.lat] // GeoJSON requires [longitude, latitude]
                     }
                 });
-        
+
                 console.log("Driver location updated successfully for userId:", userId);
-        
+
                 // Optionally confirm success
                 socket.emit('location-updated', { message: 'Location updated successfully' });
-        
+
             } catch (error) {
                 console.error('Error in update-location-driver handler:', error);
                 socket.emit('error', { message: 'Server error in location update' });
             }
         });
-        
+
 
         socket.on('disconnect', () => {
             console.log(`Client disconnected: ${socket.id}`); // Log when a client disconnects
