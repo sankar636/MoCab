@@ -88,6 +88,7 @@ const driverInTheRadious = async (lng, lat, radius) => {
                     $centerSphere: [[lng, lat], radius / 6371] // Radius in radians (Earth's radius = 6371 km)
                 }
             },
+            'vehicle.vehicleType': vehiclType
             // isAvailable: true // Ensure only available drivers are returned
         });
 

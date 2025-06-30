@@ -37,7 +37,7 @@ const createRideController = AsyncHandler(async (req, res, next) => {
     }
     // console.log("Pickup coordinates:", pickUpCoordinate);
 
-    const driverWithInRadius = await driverInTheRadious(pickUpCoordinate.lng, pickUpCoordinate.lat, 10); // latitude, longitude of the user and last one is the radius around the user
+    const driverWithInRadius = await driverInTheRadious(pickUpCoordinate.lng, pickUpCoordinate.lat, 10,vehicleType); // latitude, longitude of the user and last one is the radius around the user
     // console.log("Drivers within radius:", driverWithInRadius);
 
     if (!driverWithInRadius || driverWithInRadius.length === 0) {
