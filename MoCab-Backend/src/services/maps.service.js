@@ -78,7 +78,7 @@ const autoCompleteSuggession = async (input) => {
 
 }
 
-const driverInTheRadious = async (lng, lat, radius) => {
+const driverInTheRadious = async (lng, lat, radius,vehicleType) => {
     try {
         // console.log("Searching for drivers within radius:", { lng, lat, radius });
 
@@ -88,7 +88,7 @@ const driverInTheRadious = async (lng, lat, radius) => {
                     $centerSphere: [[lng, lat], radius / 6371] // Radius in radians (Earth's radius = 6371 km)
                 }
             },
-            'vehicle.vehicleType': vehiclType
+            'vehicle.vehicleType': vehicleType
             // isAvailable: true // Ensure only available drivers are returned
         });
 
